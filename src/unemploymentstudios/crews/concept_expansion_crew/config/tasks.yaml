@@ -1,0 +1,87 @@
+expand_storyline:
+  description: >
+    You (as the Creative Designer) are responsible for enhancing the narrative,
+    ensuring it resonates emotionally with players, and aligning it with the other
+    game elements mentioned above.
+    
+    Focus specifically on:
+      • Storyline: {Storyline}
+      • Entities: {Entities}
+      • Levels: {Levels}
+
+    Refer to Game Mechanics and Visual & Audio Style only as needed to enhance consistency:
+      • Game Mechanics: {Game_Mechanics}
+      • Visual & Audio Style: {visualAudioStyle}
+  expected_output: >
+    A refined, cohesive storyline that incorporates characters/interactable entities
+    and ties in smoothly with the provided mechanics, levels, and visual/audio direction.
+  agent: creative_designer
+
+refine_mechanics:
+  description: >
+    You (as the Mechanics Specialist) are responsible for refining gameplay systems,
+    balancing difficulty, and integrating these mechanics cohesively with the
+    storyline, visual/audio style, and levels/obstacles.
+
+    Focus specifically on:
+      • Game Mechanics: {Game_Mechanics}
+      • Entities: {Entities}
+      • Levels: {Levels}
+
+    Reference Storyline and Visual & Audio Style only when necessary to ensure coherence:
+      • Storyline: {Storyline}
+      • Visual & Audio Style: {visualAudioStyle}
+  expected_output: >
+    A detailed document outlining gameplay mechanics, skill progression, and 
+    potential challenges that align with the storyline and visuals. It should 
+    specify how entities interact and how levels evolve in difficulty.
+  agent: mechanics_specialist
+
+define_visual_audio:
+  description: >
+    You (as the Art Director) are responsible for establishing the game's aesthetic,
+    including visual themes, character/environment design, and audio direction,
+    in harmony with the storyline and core mechanics.
+    
+    Focus specifically on:
+      • Visual & Audio Style: {visualAudioStyle}
+      • Entities: {Entities}
+      • Levels: {Levels}
+
+    Reference Storyline and Game Mechanics only where essential for thematic unity:
+      • Storyline: {Storyline}
+      • Game Mechanics: {Game_Mechanics}
+  expected_output: >
+    A clear visual and audio style guide that describes the overall aesthetic,
+    key design elements for characters/environments, color palettes, and audio cues.
+    It should demonstrate how these align with the refined mechanics and storyline
+    to create a cohesive player experience.
+  agent: art_director
+
+finalize_output:
+  description: >
+    Focus on the final output from the provided inputs:
+
+    You (as the Finalizing Agent) are responsible for consolidating all contributions
+    from the team, ensuring that the final output is coherent, cohesive, and ready
+    for implementation.
+  expected_output: >
+    An pydantic consistent output that integrates the following elements into a unified vision. 
+    The final output should be in JSON format using curly braces, following this structure:
+  
+    Fields:
+      - title: string
+      - tagline: string
+      - overview: string
+      - main_character: string
+      - supporting_characters: list of name: string, description: string 
+      - world_building: string
+      - levels: list of level_name: string, description: string 
+      - enemies_and_obstacles: string
+      - gameplay_mechanics: string
+      - boss_battles: string
+      - emotional_arc: string
+      - conclusion: string
+      - visual_style: string
+      - audio_style: string
+  agent: finalizing_agent

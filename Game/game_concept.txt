@@ -1,0 +1,24 @@
+{
+  "title": "CS Student Job Quest",
+  "tagline": "Master the Art of Programming and Achieve Success",
+  "overview": "Embark on a transformative journey as a passionate computer science student striving to master programming and achieve professional success. Navigate academic and professional challenges that mirror real-world experiences.",
+  "main_character": "CS Student Avatar",
+  "supporting_characters": [
+    {"name": "Mentor", "description": "A guiding figure providing essential advice and tutorials."},
+    {"name": "AI Peers", "description": "Fellow students introducing dynamics of teamwork and rivalry, assisting in cooperative gameplay elements."}
+  ],
+  "world_building": "A lively and diverse university campus transitioning to bustling tech offices, each level symbolizing an academic or career milestone.",
+  "levels": [
+    {"level_name": "Freshman Foundations", "description": "Introduction to coding basics, combating procrastination monsters."},
+    {"level_name": "Intermediate Adventures", "description": "Complex courses and internships, engaging in coding problems and teamwork."},
+    {"level_name": "Advanced Mastery", "description": "Upper-level coursework, coding puzzles, and dealing with bug creatures."},
+    {"level_name": "The Job Quest", "description": "Objective-driven tech offices, rigorous interviews as boss battles."}
+  ],
+  "enemies_and_obstacles": "Procrastination Monsters and Bug Creatures symbolize distractions and programming errors, posing challenges that evolve with player progression.",
+  "gameplay_mechanics": "2D platformer with educational mini-games, coding puzzles, code snippets collection, skill points system, adaptive difficulty, and AI-generated challenges.",
+  "boss_battles": "Interview-style boss battles requiring platforming skills and technical question-solving to reflect job interview pressures.",
+  "emotional_arc": "From novice to confident professional, the player's journey captures the triumphs and trials of mastering computer science and succeeding in the tech industry.",
+  "conclusion": "A culminating journey that results in landing a first tech job, symbolizing the achievement of academic and professional goals.",
+  "visual_style": "Retro pixel art evoking nostalgia, academic to corporate environment progression, vibrant avatars with dynamically animated expressions.",
+  "audio_style": "Dynamic soundtrack with escalating themes during key game moments, procedural enhancements aligning audio with gameplay state shifts for immersive feedback."
+}
