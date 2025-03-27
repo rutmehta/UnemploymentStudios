@@ -3,15 +3,15 @@ from crewai.project import CrewBase, agent, crew, task
 from crewai import LLM
 
 # Import Pydantic Types
-from unemploymentstudios.types import GameConcept
+from unemploymentstudios.types import TestTypes
 
 # If you want to run a snippet of code before or after the crew starts,
 # you can use the @before_kickoff and @after_kickoff decorators
 # https://docs.crewai.com/concepts/crews#example-crew-class-with-decorators
 
 @CrewBase
-class ConceptExpansionCrew:
-    """Concept Expansion Crew"""
+class TestCrew:
+    """Test Crew"""
     agents_config = "config/agents.yaml"
     tasks_config = "config/tasks.yaml"
 
@@ -58,67 +58,13 @@ class ConceptExpansionCrew:
     # AGENTS
     # --------------------------------------------------
 
-    @agent
-    def creative_designer(self) -> Agent:
-        return Agent(
-            config=self.agents_config["creative_designer"],
-            llm = self.llm
-        )
 
-    @agent
-    def mechanics_specialist(self) -> Agent:
-        return Agent(
-            config=self.agents_config["mechanics_specialist"],
-            llm = self.llm
-        )
-
-    @agent
-    def art_director(self) -> Agent:
-        return Agent(
-            config=self.agents_config["art_director"],
-            llm = self.llm
-        )
-
-    @agent
-    def finalizing_agent(self) -> Agent:
-        return Agent(
-            config=self.agents_config["finalizing_agent"],
-            llm = self.llm
-        )
 
     # --------------------------------------------------
     # TASKS
     # --------------------------------------------------
-    
-    @task
-    def expand_storyline(self) -> Task:
-        return Task(
-            config=self.tasks_config["expand_storyline"]
-            # llm = self.llm
-        )
 
-    @task
-    def refine_mechanics(self) -> Task:
-        return Task(
-            config=self.tasks_config["refine_mechanics"]
-            # llm = self.llm
-        )
 
-    @task
-    def define_visual_audio(self) -> Task:
-        return Task(
-            config=self.tasks_config["define_visual_audio"]
-            # llm = self.llm
-        )
-
-    @task
-    def finalize_output(self) -> Task:
-        return Task(
-            config=self.tasks_config["finalize_output"],
-            # llm = self.llm,
-            context=[self.expand_storyline(), self.refine_mechanics(), self.define_visual_audio()],
-            output_pydantic=GameConcept
-        )
 
     # --------------------------------------------------
     # CREW

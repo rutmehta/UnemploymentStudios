@@ -1,24 +1,81 @@
 {
   "title": "CS Student Job Quest",
-  "tagline": "Master the Art of Programming and Achieve Success",
-  "overview": "Embark on a transformative journey as a passionate computer science student striving to master programming and achieve professional success. Navigate academic and professional challenges that mirror real-world experiences.",
-  "main_character": "CS Student Avatar",
+  "tagline": "Navigate the Challenges of Academia and Conquer the Tech Industry!",
+  "overview": "In 'CS Student Job Quest,' players dive into the life of Alex Carter, a passionate computer science student determined to conquer the intimidating realm of academia and break into the tech industry. The narrative captures the thrilling highs and daunting lows of a CS journey. Alex faces enticing yet treacherous enemies such as 'Procrastination Monsters' and 'Bug Creatures' while navigating fluctuating terrains composed of coursework mazes and coding tasks. With the ultimate goal of securing a coveted tech job, players must strategize and persevere through evolving challenges across various university terms and job scenarios.",
+  "main_character": {
+    "name": "Alex Carter",
+    "role": "Player’s Avatar",
+    "description": "Alex is a tenacious and driven computer science student with an insatiable curiosity and a knack for problem-solving. With an unyielding passion for technology and persistent optimism, Alex strives to secure a full-time position in the competitive tech world.",
+    "abilities": ["Collects SP to unlock new programming skills", "Problem-solving tactics"],
+    "emotional_arc": "Initially, Alex is optimistic yet naive, facing the struggles of balancing enthusiasm with practical hurdles. Throughout the game, Alex matures, gaining resilience and confidence, learning that failure often seeds future success."
+  },
   "supporting_characters": [
-    {"name": "Mentor", "description": "A guiding figure providing essential advice and tutorials."},
-    {"name": "AI Peers", "description": "Fellow students introducing dynamics of teamwork and rivalry, assisting in cooperative gameplay elements."}
+    {
+      "name": "Prof. Lin",
+      "role": "Mentor",
+      "description": "A wise and encouraging professor who provides Alex with fundamental coding guidance and moral support throughout the educational journey.",
+      "emotional_arc": "Represents the importance of lifelong learning, offering wisdom and a reminder that learning never truly ends, even after landing a job."
+    },
+    {
+      "name": "Jamie Brooks",
+      "role": "Fellow Student and Rival",
+      "description": "Alex’s charismatic and competitive classmate who spurs friendly rivalry and collaboration.",
+      "abilities": ["Teams up with Alex to overcome challenging coding tasks"],
+      "emotional_arc": "Encourages Alex to not only be a great programmer but also a collaborative innovator, emphasizing the importance of community."
+    },
+    {
+      "name": "AI Mentor 2000",
+      "role": "AI-driven NPC",
+      "description": "An advanced coding module that presents challenges, offers feedback, and helps simulate real-life coding environments for Alex.",
+      "emotional_arc": "Develops from a static helper to a nuanced character, reflecting Alex’s deepening understanding of AI’s potential in modern technology."
+    }
   ],
-  "world_building": "A lively and diverse university campus transitioning to bustling tech offices, each level symbolizing an academic or career milestone.",
+  "world_building": "The vibrant backdrop of 'CS Student Job Quest' is set in a visually stylized pixel art realm, piecing together the familiar and fantastical elements of campus life, complete with flashing coding terminals and bustling labs. Each level is a distinct world that echoes an academic phase or job scenario, cultivating a lively atmosphere that’s both challenging and rewarding. The lore heavily embeds elements of persistent growth, emphasizing that each obstacle is a stepping stone towards a rewarding career.",
   "levels": [
-    {"level_name": "Freshman Foundations", "description": "Introduction to coding basics, combating procrastination monsters."},
-    {"level_name": "Intermediate Adventures", "description": "Complex courses and internships, engaging in coding problems and teamwork."},
-    {"level_name": "Advanced Mastery", "description": "Upper-level coursework, coding puzzles, and dealing with bug creatures."},
-    {"level_name": "The Job Quest", "description": "Objective-driven tech offices, rigorous interviews as boss battles."}
+    {
+      "name": "Freshman Year Maze",
+      "description": "Navigate through the basics of programming, familiarizing with syntax and logic.",
+      "difficulty": "Easy",
+      "key_objectives": ["Collect beginner code snippets", "Solve basic logic puzzles"],
+      "enemies_obstacles": ["Procrastination Monsters"]
+    },
+    {
+      "name": "Sophomore Stride",
+      "description": "Tackle intermediate coursework and more complex projects.",
+      "difficulty": "Medium",
+      "key_objectives": ["Overcome advanced coding tasks", "Collaborate with Jamie Brooks"],
+      "enemies_obstacles": ["Bug Creatures", "Coding Terminals"]
+    },
+    {
+      "name": "Internship Insight",
+      "description": "Experience real-world challenges and test skills in simulated tech environments.",
+      "difficulty": "Hard",
+      "key_objectives": ["Simulate job tasks", "Impress AI Mentor 2000"],
+      "enemies_obstacles": ["Corporate Challenges"],
+      "boss_battle": "Technical interview with Prof. Lin"
+    },
+    {
+      "name": "Senior Capstone Conquest",
+      "description": "Final project culmination to secure a job offer.",
+      "difficulty": "Boss",
+      "key_objectives": ["Complete capstone project", "Prepare for job interview"],
+      "enemies_obstacles": ["Time Constraints", "Last Minute Bugs"],
+      "boss_battle": "Job interview simulation with Jamie Brooks"
+    }
   ],
-  "enemies_and_obstacles": "Procrastination Monsters and Bug Creatures symbolize distractions and programming errors, posing challenges that evolve with player progression.",
-  "gameplay_mechanics": "2D platformer with educational mini-games, coding puzzles, code snippets collection, skill points system, adaptive difficulty, and AI-generated challenges.",
-  "boss_battles": "Interview-style boss battles requiring platforming skills and technical question-solving to reflect job interview pressures.",
-  "emotional_arc": "From novice to confident professional, the player's journey captures the triumphs and trials of mastering computer science and succeeding in the tech industry.",
-  "conclusion": "A culminating journey that results in landing a first tech job, symbolizing the achievement of academic and professional goals.",
-  "visual_style": "Retro pixel art evoking nostalgia, academic to corporate environment progression, vibrant avatars with dynamically animated expressions.",
-  "audio_style": "Dynamic soundtrack with escalating themes during key game moments, procedural enhancements aligning audio with gameplay state shifts for immersive feedback."
+  "gameplay_mechanics": [
+    "Running, jumping, and dodging as core platformer actions",
+    "Educational mini-games related to coding concepts",
+    "Puzzles requiring debugging and logic",
+    "Collecting code snippets to earn Skill Points (SP)",
+    "Spending SP to unlock new abilities and power-ups",
+    "Adaptive difficulty based on player performance",
+    "AI-generated coding challenges",
+    "Boss battles in the form of interviews with CS-related questions",
+    "NPC interactions providing guidance, challenges, and dialogue"
+  ],
+  "visual_style": "The game adopts a nostalgic pixel art style, reminiscent of classic retro platformers, evoking a sense of simplicity and charm while allowing for detailed environments that intrigue and engage players.",
+  "audio_style": "A looping soundtrack inspired by chiptune and retro melodies, providing an energetic backdrop. As challenges arise, the music intensifies to heighten tension, especially during interviews and boss battles.",
+  "emotional_arc": "The overarching emotional journey is one of growth and empowerment, navigating Alex's transition from a starry-eyed student to a poised professional. The story involves balancing studies and overcoming mental hurdles, creating an emotional narrative of perseverance and hope.",
+  "conclusion": "As Alex secures a coveted tech job, the game concludes with a message highlighting the nonlinear path to success, emphasizing both failures and triumphs contributing to personal and professional growth. 'CS Student Job Quest' inspires players to embrace challenges with optimism."
 }

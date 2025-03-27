@@ -1,0 +1,63 @@
+analyze_game_concept:
+  description: >
+    You (as the Lead Developer) are responsible for carefully analyzing the expanded
+    game concept provided by the Concept Expansion Crew. This includes taking note
+    of characters, storyline, gameplay mechanics, level details, and visual/audio styles,
+    with the goal of informing upcoming technical file structure decisions.
+  expected_output: >
+    A structured summary that highlights essential details influencing technical
+    file organization and architecture.
+  agent: lead_developer
+
+identify_required_files:
+  description: >
+    You (as the System Architect) are responsible for determining all necessary
+    files required for the HTML5 game. This includes providing clear filenames
+    (e.g., index.html, style.css, game.js, boot.js, preloader.js, music.js, mainmenu.js)
+    and identifying any additional specialized files if needed.
+  expected_output: >
+    A comprehensive list of essential and recommended game files, complete with clear
+    names and brief justifications for each.
+  agent: system_architect
+
+clarify_file_purposes:
+  description: >
+    You (as the Technical Writer) are responsible for articulating the exact purpose
+    of each identified file. Your task is to ensure that every member of the development
+    team understands the role and function of each file within the overall structure.
+  expected_output: >
+    A detailed purpose statement for each file, providing enough clarity for developers
+    to quickly understand what belongs in each file and why.
+  agent: technical_writer
+
+define_content_guidelines:
+  description: >
+    You (as the Lead Developer) are responsible for specifying the core logic, styles,
+    and assets each file must contain. These guidelines must align with the analyzed
+    game concept, ensuring a consistent approach to implementing gameplay, visuals,
+    and audio.
+  expected_output: >
+    A structured set of content guidelines for each listed file, clearly outlining
+    the required elements and how they should be implemented.
+  agent: lead_developer
+
+map_file_dependencies:
+  description: >
+    You (as the System Architect) are responsible for outlining all inter-file
+    dependencies and interactions, clearly specifying loading sequences, runtime
+    interactions, and data flows (e.g., game.js depends on assets preloaded by preloader.js).
+  expected_output: >
+    An explicit dependency map that details which files rely on others, how they
+    interact, and the order in which they should be loaded or initialized.
+  agent: system_architect
+
+compile_final_file_structure_spec:
+  description: >
+    You (as the Project Manager) must consolidate all previous outputs into a single,
+    detailed FileStructureSpec object. This final output should thoroughly define each
+    file's name, purpose, content guidelines, and dependencies, ready for developer
+    implementation.
+  expected_output: >
+    A fully structured and finalized FileStructureSpec object, incorporating all
+    details from prior tasks into one coherent specification document.
+  agent: project_manager

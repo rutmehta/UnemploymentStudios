@@ -3,15 +3,15 @@ from crewai.project import CrewBase, agent, crew, task
 from crewai import LLM
 
 # Import Pydantic Types
-from unemploymentstudios.types import GameConcept
+from unemploymentstudios.types import GameFile
 
 # If you want to run a snippet of code before or after the crew starts,
 # you can use the @before_kickoff and @after_kickoff decorators
 # https://docs.crewai.com/concepts/crews#example-crew-class-with-decorators
 
 @CrewBase
-class ConceptExpansionCrew:
-    """Concept Expansion Crew"""
+class GeneralCodeCrew:
+    """General Code Crew"""
     agents_config = "config/agents.yaml"
     tasks_config = "config/tasks.yaml"
 
@@ -57,67 +57,94 @@ class ConceptExpansionCrew:
     # --------------------------------------------------
     # AGENTS
     # --------------------------------------------------
-
     @agent
-    def creative_designer(self) -> Agent:
+    def full_stack_developer(self) -> Agent:
         return Agent(
-            config=self.agents_config["creative_designer"],
-            llm = self.llm
+            config=self.agents_config["full_stack_developer"],
+            llm=self.llm
         )
 
     @agent
-    def mechanics_specialist(self) -> Agent:
+    def javascript_developer(self) -> Agent:
         return Agent(
-            config=self.agents_config["mechanics_specialist"],
-            llm = self.llm
+            config=self.agents_config["javascript_developer"],
+            llm=self.llm
         )
 
     @agent
-    def art_director(self) -> Agent:
+    def ui_ux_designer(self) -> Agent:
         return Agent(
-            config=self.agents_config["art_director"],
-            llm = self.llm
-        )
-
-    @agent
-    def finalizing_agent(self) -> Agent:
-        return Agent(
-            config=self.agents_config["finalizing_agent"],
-            llm = self.llm
+            config=self.agents_config["ui_ux_designer"],
+            llm=self.llm
         )
 
     # --------------------------------------------------
     # TASKS
     # --------------------------------------------------
-    
     @task
-    def expand_storyline(self) -> Task:
+    def analyze_game_concept(self) -> Task:
         return Task(
-            config=self.tasks_config["expand_storyline"]
+            config=self.tasks_config["analyze_game_concept"]
             # llm = self.llm
         )
 
     @task
-    def refine_mechanics(self) -> Task:
+    def identify_required_files(self) -> Task:
         return Task(
-            config=self.tasks_config["refine_mechanics"]
+            config=self.tasks_config["identify_required_files"],
+            context=[self.analyze_game_concept()]
             # llm = self.llm
         )
 
     @task
-    def define_visual_audio(self) -> Task:
+    def clarify_file_purposes(self) -> Task:
         return Task(
-            config=self.tasks_config["define_visual_audio"]
+            config=self.tasks_config["clarify_file_purposes"],
+            context=[
+                self.analyze_game_concept(), 
+                self.identify_required_files()
+            ]
             # llm = self.llm
         )
 
     @task
-    def finalize_output(self) -> Task:
+    def define_content_guidelines(self) -> Task:
         return Task(
-            config=self.tasks_config["finalize_output"],
-            # llm = self.llm,
-            context=[self.expand_storyline(), self.refine_mechanics(), self.define_visual_audio()],
-            output_pydantic=GameConcept
+            config=self.tasks_config["define_content_guidelines"],
+            context=[
+                self.analyze_game_concept(), 
+                self.identify_required_files(), 
+                self.clarify_file_purposes()
+            ]
+            # llm = self.llm
+        )
+
+    @task
+    def map_file_dependencies(self) -> Task:
+        return Task(
+            config=self.tasks_config["map_file_dependencies"],
+            context=[
+                self.analyze_game_concept(),
+                self.identify_required_files(),
+                self.clarify_file_purposes(),
+                self.define_content_guidelines()
+            ]
+            # llm = self.llm
+        )
+
+    @task
+    def compile_final_file_structure_spec(self) -> Task:
+        return Task(
+            config=self.tasks_config["compile_final_file_structure_spec"],
+            context=[
+                self.analyze_game_concept(),
+                self.identify_required_files(),
+                self.clarify_file_purposes(),
+                self.define_content_guidelines(),
+                self.map_file_dependencies()
+            ],
+            output_pydantic=GameFile
+            # llm = self.llm
         )
 
     # --------------------------------------------------

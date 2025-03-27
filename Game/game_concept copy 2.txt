@@ -1,0 +1,88 @@
+{
+  "title": "CS Student Job Quest",
+  "tagline": "Embark on the ultimate coding adventure from classroom to career.",
+  "overview": "In 'CS Student Job Quest,' players enter a vibrant and challenging world that mirrors the intricacies of a computer science education and career path. This 2D platformer marries the light-heartedness of classic games with the substantive depth of real-world academic and programming challenges. The journey from eager student to accomplished tech professional is immersive, blending educational elements with emotional storytelling.",
+  "main_character": {
+    "name": "Alex Byte",
+    "role": "The determined protagonist on a quest to secure a fulfilling tech career.",
+    "description": "Alex is a passionate computer science student, eager to learn but sometimes overwhelmed by the complexities of both academia and impending professional expectations. Sporting a hoodie with a binary print, Alex is visually designed to resonate with digital native aesthetics.",
+    "abilities": ["Debug Mode", "Code Merge"],
+    "emotional_arc": "Alex begins as an idealistic and somewhat naive student. Through overcoming academic hurdles and professional challenges, including bouts with procrastination and coding bugs, Alex matures into a confident and skilled individual. This journey resonates emotionally as players experience growth alongside Alex, celebrating victories and learning from failures."
+  },
+  "supporting_characters": [
+    {
+      "name": "Dr. Byte",
+      "role": "Mentor and guiding figure at the university.",
+      "description": "Known for their encouragement and depth of knowledge, Dr. Byte provides foundational guidance and occasionally shares 'Easter egg' wisdom about the tech industry.",
+      "abilities": ["Mentorship Boosts"],
+      "emotional_arc": "Initially seen as just another professor, Dr. Byte evolves into an essential figure who helps Alex recognize their potential."
+    },
+    {
+      "name": "Emily Terminal",
+      "role": "Rival and source of friendly competition.",
+      "description": "A fellow student, Emily excels in courses and often challenges Alex, pushing them to strive for excellence. Known for her pragmatic approach and quick wit.",
+      "abilities": ["Challenge Mode"],
+      "emotional_arc": "Starts as a competitor but gradually becomes a valuable ally, representing the importance of peer support and collaboration."
+    },
+    {
+      "name": "Bugsy",
+      "role": "Mischievous 'bug creature' antagonists designed to disrupt Alex's progress.",
+      "description": "Persistent and varied in their interference, Bugsy prompts dynamic problem-solving and adds comic relief to tense moments.",
+      "emotional_arc": "Represents the challenges and unpredictability of coding work, teaching resilience through constant problem-solving."
+    },
+    {
+      "name": "Mr. Recruit",
+      "role": "AI-driven interviewer and gatekeeper to professional success.",
+      "description": "With a sharp suit and an array of tech-based questions, Mr. Recruit challenges players during intense interview sequences, testing both knowledge and dexterity.",
+      "emotional_arc": "At first intimidating and seemingly insurmountable, Mr. Recruit comes to symbolize the thrilling challenge of personal and professional growth."
+    }
+  ],
+  "world_building": "CS Student Job Quest unfolds in a pixelated reality where academia meets the tech industry. Levels vary from vibrant college campuses, buzzing with digital billboards and animated student NPCs, to high-tech coding labs filled with evolving puzzles and challenges. The backdrop shifts to bustling cityscapes for professional interviews, emphasizing the step from student life to the working world. Environmental storytelling is rich, imbuing each scene with context that illustrates the nuanced journey of a CS student.",
+  "levels": [
+    {
+      "name": "Introduction to Computing",
+      "description": "Players start at Alex's university, navigating basic platforming and solving beginner coding puzzles, setting the foundation for skill development.",
+      "difficulty": "Easy",
+      "key_objectives": ["Complete basic platforming", "Solve introductory coding puzzles", "Collect initial code snippets"],
+      "enemies_obstacles": ["Procrastination monsters"],
+      "boss_battle": null
+    },
+    {
+      "name": "Advanced Algorithms",
+      "description": "A level set in complex databases and high-tech labs with puzzles focusing on algorithm efficiency and data structures.",
+      "difficulty": "Medium",
+      "key_objectives": ["Complete algorithm-based puzzles", "Use Debug Mode effectively", "Overcome Bugsy in strategic battles"],
+      "enemies_obstacles": ["Bug creatures", "Complex platforms"],
+      "boss_battle": "A major programming challenge testing understandings of optimal algorithms."
+    },
+    {
+      "name": "Interview Prep",
+      "description": "In the bustling cityscape, players encounter intense interview preparations, replicating real-life tech company pressures with complex coding puzzles.",
+      "difficulty": "Hard",
+      "key_objectives": ["Master interview techniques", "Solve high-level coding issues", "Simulate stress management in gameplay"],
+      "enemies_obstacles": ["High-intensity coding questions", "Time-limited problem-solving"],
+      "boss_battle": "A mock interview with Mr. Recruit, requiring deep subject knowledge and quick thinking."
+    },
+    {
+      "name": "The Final Interview",
+      "description": "The final stage set in a corporate office high-rise; merge all learned skills to secure the coveted tech role.",
+      "difficulty": "Boss",
+      "key_objectives": ["Demonstrate cumulative skills", "Win the job offer"],
+      "enemies_obstacles": ["Ultimate code debugging", "AI-driven obstacle courses"],
+      "boss_battle": "An engaging final interview with advanced CS questions and pressure-platforming segments with Mr. Recruit."
+    }
+  ],
+  "gameplay_mechanics": [
+    "Classic platformer movement (run, jump, dodge)",
+    "Collecting code snippets to earn Skill Points (SP) for new abilities",
+    "Educational mini-games and coding puzzles integrated within levels",
+    "Debugging platforms to fix obstacles",
+    "Creating temporary bridges using coding solutions",
+    "Adaptive difficulty based on player performance and AI-generated coding challenges",
+    "Boss battles involving coding-related questions"
+  ],
+  "visual_style": "The game adopts a retro-inspired pixel art style, reminiscent of classic platformers yet injected with modern sensibilities. Designed to evoke nostalgia while offering clarity and detail. The color scheme is vibrant and lively, dominated by blues, greens, and reds. This vibrancy represents both the excitement and pressure inherent in the journey of a computer science student.",
+  "audio_style": "The soundtrack is catchy and loops seamlessly, integrating chiptune and electronic elements with orchestral undertones to suit each stage's mood. Retro sound effects accompany actions like jumping, coding, and debugging, adding tactile physicality to virtual tasks.",
+  "emotional_arc": "The emotional journey is woven through Alex's growth from student to professional. Players empathize with the highs and lows of education, feeling compassion and triumph as setbacks transform into success. The game's end goal echoes real-world achievement, leaving players with fulfillment and nostalgia for education's transformative power.",
+  "conclusion": "CS Student Job Quest concludes with Alex successfully securing a dynamic position in the tech industry. The transformation throughout the game encapsulates not only the personal growth of Alex but also the educational odyssey that real-life students experience, underscoring the rewarding culmination of perseverance, skill development, and the thrill of embarking on a new professional journey."  
+}

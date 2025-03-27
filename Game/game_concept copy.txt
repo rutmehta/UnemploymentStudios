@@ -1,0 +1,28 @@
+{
+  "title": "CS Student Job Quest",
+  "tagline": "Embark on the Journey from Classroom to Career!",
+  "overview": "In 'CS Student Job Quest,' players step into the shoes of Alex, a determined and resourceful computer science student navigating the journey of mastering their field and landing a coveted tech job. Through ten engaging levels, players experience real-world challenges faced by aspiring tech professionals.",
+  "main_character": "Alex",
+  "supporting_characters": [
+    {"name": "Professor Smith", "description": "A wise mentor who guides Alex through challenging coursework and provides essential academic support."},
+    {"name": "Jamie", "description": "Alex's best friend and study partner, offering emotional support and collaborative problem-solving."},
+    {"name": "AI Mentor", "description": "A digital assistant that provides coding tips and practice problems to enhance Alex's skills."}
+  ],
+  "world_building": "The game world is built around the academic journey of a university campus evolving into a bustling tech workspace. Each level introduces a new environment—from lecture halls and labs to immersive office spaces—each tailored to reflect Alex’s current academic and professional stage.",
+  "levels": [
+    {"level_name": "101 Beginnings", "description": "Introduction to basic platforming and coding puzzles in a campus setting."},
+    {"level_name": "Rushed Assignments", "description": "Focus on time management and handling pressure in settings like busy study halls."},
+    {"level_name": "All-Nighter Coding", "description": "Challenges focus on deep concentration and accuracy under tight deadlines in coding labs."},
+    {"level_name": "Innovative Project", "description": "Encourages lateral thinking and creativity, set in a collaborative workspace."},
+    {"level_name": "Internship Trials", "description": "Simulates job interview scenarios, integrating complex puzzles and skill tests."},
+    {"level_name": "Full-time Aspirations", "description": "A culmination of learned skills in a career-oriented office environment."},
+    {"level_name": "Senior Projects", "description": "Strategic thinking amid intricate puzzles in a senior project lab setting."}
+  ],
+  "enemies_and_obstacles": "Procrastination monsters and bug creatures represent distractions and errors. Each enemy requires different strategies to overcome, increasing in complexity as Alex progresses.",
+  "gameplay_mechanics": "Players manage Alex using classic platformer controls, enhanced by educational mini-games and coding challenges. Adaptive difficulty and AI-generated tasks keep players engaged, and collectible code snippets unlock new abilities.",
+  "boss_battles": "Boss battles are represented by job interviews where mastery of platforming and coding skills is tested through interactive dialogue and skill-based challenges.",
+  "emotional_arc": "Alex's journey is emotional, marked by moments of self-doubt, determination, camaraderie with peers, and triumph over adversity. This arc mirrors the player's learning curve, creating a personal connection to the narrative.",
+  "conclusion": "'CS Student Job Quest' offers a seamless blend of narrative, gameplay, and audio-visual elements, providing a resonant experience. Through Alex's journey, players reflect their own educational paths, ending with a gratifying sense of achievement as Alex lands a tech job.",
+  "visual_style": "The game features retro pixel art with a vibrant palette, balancing academic themes with a playful twist. Each environment, from campuses to offices, is distinctively designed to enhance thematic storytelling.",
+  "audio_style": "A dynamic chiptune soundtrack accompanies the player, changing with the gameplay's intensity—from relaxing ambient tracks to thrilling themes that underscore interviews. Retro sound effects and subtle UI audio cues enhance the nostalgic atmosphere."
+}

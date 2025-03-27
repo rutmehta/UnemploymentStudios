@@ -1,0 +1,66 @@
+analyze_game_concept:
+  description: >
+    You (as the Full Stack Developer) are responsible for carefully analyzing the 
+    overall game concept, along with any provided file list or project details. 
+    This includes noting characters, storyline elements, gameplay mechanics, and 
+    visual/audio styles, with the goal of informing upcoming technical decisions.
+  expected_output: >
+    A structured summary that highlights essential details influencing
+    the technical file organization and implementation strategy.
+  agent: full_stack_developer
+
+identify_required_files:
+  description: >
+    You (as the Full Stack Developer) determine all necessary files for this 
+    HTML5 game. Based on the project's scope, you decide on core files 
+    (like HTML, CSS, and JavaScript) as well as any specialized files needed 
+    for mechanics, media assets, or additional game functionalities.
+  expected_output: >
+    A comprehensive list of essential and recommended game files, with clear
+    names and brief justifications for each (e.g., index.html, style.css, 
+    game.js, boot.js, etc.).
+  agent: full_stack_developer
+
+clarify_file_purposes:
+  description: >
+    You (as the JavaScript Developer) articulate each identified file’s purpose 
+    in the broader codebase. Ensuring the team understands the exact role and function
+    of each file is crucial to maintaining clarity and preventing overlap.
+  expected_output: >
+    A detailed purpose statement for each file, with enough clarity for developers
+    and designers to quickly grasp what should go into each file and why.
+  agent: javascript_developer
+
+define_content_guidelines:
+  description: >
+    You (as the JavaScript Developer) specify the logic, structure, and core 
+    styles each file must contain. Guidelines must align with the analyzed
+    game concept, ensuring consistency in implementing gameplay, visuals, 
+    and audio across the codebase.
+  expected_output: >
+    A structured set of content guidelines for every listed file, clearly outlining
+    the required elements and how they should be implemented or styled.
+  agent: javascript_developer
+
+map_file_dependencies:
+  description: >
+    You (as the Full Stack Developer) outline how all files interact and depend on 
+    each other, specifying loading sequences, runtime interactions, and data flows 
+    (e.g., game.js depends on assets preloaded by preloader.js). Your architectural 
+    overview ensures a coherent and maintainable code structure.
+  expected_output: >
+    An explicit dependency map that details which files rely on others, how they
+    interact, and in what order they should be initialized.
+  agent: full_stack_developer
+
+compile_final_file_structure_spec:
+  description: >
+    You (as the UI/UX Designer) consolidate all previous outputs into a final 
+    FileStructureSpec object, ensuring each file's name, purpose, content guidelines, 
+    and dependencies are clearly documented. While the focus is typically on visuals,
+    your unique perspective ensures the final documentation is clear and user-friendly.
+  expected_output: >
+    A single, well-structured FileStructureSpec object that incorporates all
+    decisions made in earlier tasks, ready for seamless handoff and implementation
+    by the development team.
+  agent: ui_ux_designer

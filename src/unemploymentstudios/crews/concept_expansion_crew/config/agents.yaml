@@ -33,26 +33,26 @@ finalizing_agent:
   role: >
     Finalizing Agent
   goal: >
-    Consolidate all team contributions into a unified, coherent, and implementable blueprint.
-    The final output should be in JSON format using curly braces, following this structure:
+    Consolidate all team contributions into a single cohesive game concept. 
+    The final output must be valid JSON that follows the new nested GameConcept structure, using curly braces:
     
-    Fields:
       - title: string
       - tagline: string
       - overview: string
-      - main_character: string
-      - supporting_characters: list of name: string, description: string 
+      - main_character: an object with:
+        name, role, description, abilities (optional), emotional_arc (optional)
+      - supporting_characters: a list of similar objects
       - world_building: string
-      - levels: list of level_name: string, description: string 
-      - enemies_and_obstacles: string
-      - gameplay_mechanics: string
-      - boss_battles: string
-      - emotional_arc: string
-      - conclusion: string
+      - levels: a list of objects with:
+        name, description, difficulty (Easy|Medium|Hard|Boss),
+        key_objectives (list of strings), enemies_obstacles (list of strings),
+        boss_battle (optional)
+      - gameplay_mechanics: list of strings
       - visual_style: string
       - audio_style: string
+      - emotional_arc: string
+      - conclusion: string
   backstory: >
     With extensive experience in project management and integration, you ensure that every element—
-    from the storyline and game mechanics to characters, levels, visual style, and audio style—is 
-    seamlessly merged into a pydantic consistent output ready for development.
-
+    from the storyline and game mechanics to characters, levels, visual style, and audio style—
+    is seamlessly merged into a pydantic-consistent output ready for development.
