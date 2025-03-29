@@ -2,81 +2,105 @@
   "files": [
     {
       "filename": "index.html",
-      "purpose": "Acts as the main entry point to the game.",
-      "content_guidelines": "Links all necessary CSS and JavaScript files, establishing the webpage's basic structure and visual hierarchy.",
-      "dependencies": ["style.css", "boot.js", "preloader.js", "game.js", "mainmenu.js", "music.js"]
+      "purpose": "Acts as the entry point of the game, setting the stage by referencing all primary assets including scripts and styles.",
+      "content_guidelines": "Includes DOCTYPE declaration, meta tags, links to style.css, and scripts for boot.js, preloader.js, game.js, mainmenu.js.",
+      "dependencies": []
     },
     {
       "filename": "style.css",
-      "purpose": "Manages the visual styling of the game.",
-      "content_guidelines": "Covers typography, layout, colors, and responsiveness. Utilize CSS preprocessors for clean and scalable design.",
+      "purpose": "Governs the visual styling of the game’s UI components.",
+      "content_guidelines": "Defines styles for the HTML elements to ensure a consistent look across the game.",
       "dependencies": ["index.html"]
     },
     {
-      "filename": "game.js",
-      "purpose": "Functions as the core game logic file.",
-      "content_guidelines": "Encapsulates critical game operations and mechanics. Uses object-oriented or component-based design patterns.",
-      "dependencies": ["preloader.js"]
-    },
-    {
-      "filename": "boot.js",
-      "purpose": "Initializes game settings and prepares the environment before assets load.",
-      "content_guidelines": "Sets up configurations such as scaling and input handling.",
-      "dependencies": []
-    },
-    {
-      "filename": "preloader.js",
-      "purpose": "Manages the efficient loading of game assets.",
-      "content_guidelines": "Ensure assets like images and sounds are ready before game start. Use promises or async/await.",
-      "dependencies": ["boot.js"]
-    },
-    {
-      "filename": "music.js",
-      "purpose": "Specifically manages game music.",
-      "content_guidelines": "Handles playback, volume control, and switching using Web Audio API.",
-      "dependencies": ["preloader.js"]
-    },
-    {
-      "filename": "mainmenu.js",
-      "purpose": "Manages the main menu UI, navigation, and interactions.",
-      "content_guidelines": "Provides user options to configure or start the game. Uses state management for display logic.",
-      "dependencies": ["preloader.js", "boot.js"]
-    },
-    {
-      "filename": "/assets/characters/",
-      "purpose": "Stores character-specific assets.",
-      "content_guidelines": "Organize assets for animation, sprite management, and audio cues. Updates character attributes and behaviors in characters.json.",
-      "dependencies": ["game.js", "'scripts/mechanics/physics.js'", "'scripts/mechanics/controls.js'"]
-    },
-    {
-      "filename": "/assets/storyline/",
-      "purpose": "Contains narrative scripts and supports storytelling.",
-      "content_guidelines": "Includes localization files and maintains versions using version control.",
+      "filename": "src/boot.js",
+      "purpose": "Handles initial game configurations and environment setups like screen size and scaling options.",
+      "content_guidelines": "Includes initialization settings for game configurations.",
       "dependencies": ["index.html"]
     },
     {
-      "filename": "/scripts/mechanics/",
-      "purpose": "Hosts modular JavaScript files for game mechanics.",
-      "content_guidelines": "Promotes code reuse and component scalability. Uses gameplay-config.json for parameters.",
-      "dependencies": ["game.js"]
+      "filename": "src/preloader.js",
+      "purpose": "Manages the loading of game assets, displaying a load screen while resources like images and sounds are retrieved.",
+      "content_guidelines": "Contains logic for preloading game assets efficiently.",
+      "dependencies": ["src/boot.js"]
     },
     {
-      "filename": "/levels/",
-      "purpose": "Allocate directories for each level.",
-      "content_guidelines": "Store maps, assets, and settings. Use scene-manager.js for transitions.",
-      "dependencies": ["scene-manager.js"]
+      "filename": "src/game.js",
+      "purpose": "Serves as the central hub for all game functions where core game logic and game loop are executed.",
+      "content_guidelines": "Includes main game loop and management of game phases.",
+      "dependencies": ["src/preloader.js", "src/boot.js"]
     },
     {
-      "filename": "/assets/visuals/",
-      "purpose": "Categorizes visual assets.",
-      "content_guidelines": "Ensures orderly storage and retrieval. Optimize assets for web compatibility.",
+      "filename": "src/mainmenu.js",
+      "purpose": "Controls the logic and rendering of the main menu screen, including button interactions and transition to other states.",
+      "content_guidelines": "Manages interface elements and transitions to different game states.",
+      "dependencies": ["src/preloader.js"]
+    },
+    {
+      "filename": "src/scripts/character.js",
+      "purpose": "Contains logic for character behavior, attributes, and state changes.",
+      "content_guidelines": "Defines character attributes, movement methods, and interaction capabilities.",
+      "dependencies": ["src/game.js"]
+    },
+    {
+      "filename": "src/scripts/physics.js",
+      "purpose": "Handles game physics for interaction scripts, ensuring realistic movement and object interactions.",
+      "content_guidelines": "Implements physics calculations for movement and interactions.",
+      "dependencies": ["src/game.js"]
+    },
+    {
+      "filename": "src/scripts/mechanics.js",
+      "purpose": "Manages game rules and interactions, focusing on core gameplay mechanics.",
+      "content_guidelines": "Defines gameplay interactions and rules.",
+      "dependencies": ["src/game.js"]
+    },
+    {
+      "filename": "assets/characters",
+      "purpose": "Stores visual character assets including sprites, animations, and effects.",
+      "content_guidelines": "Holds character images and animation sequences.",
       "dependencies": []
     },
     {
-      "filename": "/assets/audio/",
-      "purpose": "Organizes audio files.",
-      "content_guidelines": "Structured naming conventions and metadata in audio-meta.json for seamless integration.",
-      "dependencies": ["preloader.js", "music.js"]
+      "filename": "assets/environments",
+      "purpose": "Contains environment-specific visuals used across different game levels.",
+      "content_guidelines": "Holds images and textures for backgrounds and scenery.",
+      "dependencies": []
+    },
+    {
+      "filename": "assets/audio",
+      "purpose": "Stores all audio files like effects and music.",
+      "content_guidelines": "Includes .mp3 or .wav files categorized by usage (background, effects).",
+      "dependencies": []
+    },
+    {
+      "filename": "levels/level1",
+      "purpose": "Contains scripts and assets specific to the first game level.",
+      "content_guidelines": "Holds level map data, relevant environment assets, and scripts.",
+      "dependencies": ["src/game.js"]
+    },
+    {
+      "filename": "narratives",
+      "purpose": "Stores narrative scripts including storyline progressions and dialogues.",
+      "content_guidelines": "Uses JSON/XML for conversations and branching stories.",
+      "dependencies": ["src/game.js"]
+    },
+    {
+      "filename": "types",
+      "purpose": "Holds custom TypeScript type declarations and interfaces.",
+      "content_guidelines": "Defines type safety elements for TypeScript projects.",
+      "dependencies": []
+    },
+    {
+      "filename": "docs",
+      "purpose": "Houses project-related documentation, aiding development and maintenance.",
+      "content_guidelines": "Includes technical guidelines, user manuals, and design documents.",
+      "dependencies": []
+    },
+    {
+      "filename": "utils",
+      "purpose": "Contains utility functions and shared resources for use across different scripts.",
+      "content_guidelines": "Shared functions and classes to optimize for reusable components.",
+      "dependencies": []
     }
   ]
 }

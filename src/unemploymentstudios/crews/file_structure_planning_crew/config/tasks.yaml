@@ -1,63 +1,103 @@
 analyze_game_concept:
   description: >
-    You (as the Lead Developer) are responsible for carefully analyzing the expanded
-    game concept provided by the Concept Expansion Crew. This includes taking note
-    of characters, storyline, gameplay mechanics, level details, and visual/audio styles,
-    with the goal of informing upcoming technical file structure decisions.
+    You (as the Lead Developer) are responsible for analyzing the game concept 
+    "{title}"—featuring main character {main_character_name} (a {main_character_role}), 
+    {supporting_characters|length} supporting characters, and {levels|length} levels 
+    that escalate from {first_level_difficulty} to {last_level_difficulty} difficulty. 
+    Take careful note of the overall storyline in {overview}, the unique abilities 
+    {main_character_abilities} of the protagonist, the obstacles listed in {first_level_enemies_obstacles}, 
+    and the stylistic cues from {visual_style} and {audio_style}. All these details 
+    will inform how we organize the technical file structure—identifying which files 
+    need to handle character logic, level progression, and stylistic assets.
   expected_output: >
-    A structured summary that highlights essential details influencing technical
-    file organization and architecture.
+    A structured summary that highlights essential details influencing technical 
+    file organization and architecture, including references to {title}, {tagline}, 
+    {main_character_name}, the boss battles mentioned in {last_level_boss_battle}, 
+    the emotional tone from {emotional_arc}, and any specific gameplay mechanics 
+    listed in {gameplay_mechanics}.
   agent: lead_developer
 
 identify_required_files:
   description: >
-    You (as the System Architect) are responsible for determining all necessary
-    files required for the HTML5 game. This includes providing clear filenames
-    (e.g., index.html, style.css, game.js, boot.js, preloader.js, music.js, mainmenu.js)
-    and identifying any additional specialized files if needed.
+    You (as the System Architect) are responsible for determining all necessary 
+    files for the HTML5 game titled "{title}". Consider how each file will support 
+    gameplay features such as {gameplay_mechanics}, level designs like {first_level_name}, 
+    and the aesthetic elements drawn from {visual_style} and {audio_style}. 
+    Factor in special requirements (e.g., files handling character progression for 
+    {main_character_name}, or audio files for boss battles at the {last_level_name} level).
   expected_output: >
-    A comprehensive list of essential and recommended game files, complete with clear
-    names and brief justifications for each.
+    A comprehensive list of essential and recommended files (e.g., index.html, style.css, 
+    game.js, boot.js, preloader.js, music.js, mainmenu.js), with clear justifications. 
+    Explain how each file maps to core functionality, such as loading assets for 
+    {main_character_name}, implementing the difficulty tiers for {levels}, and 
+    enabling the visual or audio themes described in {visual_style} and {audio_style}.
   agent: system_architect
 
 clarify_file_purposes:
   description: >
-    You (as the Technical Writer) are responsible for articulating the exact purpose
-    of each identified file. Your task is to ensure that every member of the development
-    team understands the role and function of each file within the overall structure.
+    You (as the Technical Writer) must articulate the exact purpose of each identified 
+    file within the context of "{title}". For instance, if a file loads audio, clarify 
+    how it will integrate the soundtrack that matches the emotional tone in {emotional_arc}, 
+    or if a file manages in-game dialogue for {supporting_characters}, specify which 
+    parts of the storyline (from {overview}) it covers. 
+    Ensure developers understand each file’s role in presenting {main_character_name}'s 
+    journey, from the first level {first_level_name} to the concluding showdown in 
+    {last_level_name}.
   expected_output: >
-    A detailed purpose statement for each file, providing enough clarity for developers
-    to quickly understand what belongs in each file and why.
+    A detailed purpose statement for each file, showing how it supports elements like 
+    {main_character_abilities}, enemy/obstacle configurations from {first_level_enemies_obstacles}, 
+    or the consistent aesthetic established in {visual_style} and {audio_style}. 
+    Each purpose statement should make it clear why that file exists and how it ties 
+    back to specific parts of the expanded concept.
   agent: technical_writer
 
 define_content_guidelines:
   description: >
-    You (as the Lead Developer) are responsible for specifying the core logic, styles,
-    and assets each file must contain. These guidelines must align with the analyzed
-    game concept, ensuring a consistent approach to implementing gameplay, visuals,
-    and audio.
+    You (as the Lead Developer) are responsible for specifying the core logic, styles, 
+    and assets each file must include to realize the concept of "{title}". This includes 
+    detailing how {gameplay_mechanics} will be implemented, how the design for {main_character_name} 
+    translates into code (e.g., sprite handling, ability logic), and how the levels 
+    {levels_names} progressively increase in difficulty. 
+    Incorporate references to {visual_style} for layout or UI, {audio_style} for 
+    background music or sound effects, and any unique interactions from {supporting_characters}.
   expected_output: >
-    A structured set of content guidelines for each listed file, clearly outlining
-    the required elements and how they should be implemented.
+    A structured set of content guidelines linking each file to the relevant elements 
+    of the game concept. Specify, for example, the logic required to handle {main_character_abilities}, 
+    how to preload assets for the boss battle at {last_level_name}, or how to maintain 
+    narrative consistency with {overview} across multiple files. All guidelines should 
+    align with the intended emotional journey in {emotional_arc}.
   agent: lead_developer
 
 map_file_dependencies:
   description: >
-    You (as the System Architect) are responsible for outlining all inter-file
-    dependencies and interactions, clearly specifying loading sequences, runtime
-    interactions, and data flows (e.g., game.js depends on assets preloaded by preloader.js).
+    You (as the System Architect) are responsible for outlining all inter-file 
+    dependencies and interactions for "{title}". Specify how certain files rely on 
+    data from others—e.g., game.js depends on preloader.js to load assets for 
+    {levels}, and mainmenu.js might reference storyline segments from {overview}. 
+    Indicate the runtime interactions that enable character progression for 
+    {main_character_name} and detail any special considerations for loading 
+    audio tracks matching {audio_style}.
   expected_output: >
-    An explicit dependency map that details which files rely on others, how they
-    interact, and the order in which they should be loaded or initialized.
+    An explicit dependency map that clearly shows how each file interacts with the 
+    rest—e.g., in what order files should be initialized, which files handle data 
+    for the advanced mechanics in {gameplay_mechanics}, or how the ending cinematic 
+    referencing {conclusion} is triggered after the final boss battle. Highlight 
+    any circular dependencies or high-level flows essential to gameplay.
   agent: system_architect
 
 compile_final_file_structure_spec:
   description: >
-    You (as the Project Manager) must consolidate all previous outputs into a single,
-    detailed FileStructureSpec object. This final output should thoroughly define each
-    file's name, purpose, content guidelines, and dependencies, ready for developer
-    implementation.
+    You (as the Project Manager) must consolidate all previous outputs into a single, 
+    detailed FileStructureSpec object for "{title}". It should reflect the entire 
+    journey from {overview} to the conclusion in {conclusion}, the roles of 
+    {main_character_name} and {supporting_characters}, as well as how {levels} 
+    progress in difficulty. This final output should thoroughly define each file’s 
+    name, purpose, content guidelines, and dependencies in one coherent reference 
+    document.
   expected_output: >
-    A fully structured and finalized FileStructureSpec object, incorporating all
-    details from prior tasks into one coherent specification document.
+    A fully structured and finalized FileStructureSpec object, incorporating references 
+    to any relevant boss battles (e.g., {last_level_boss_battle}), {visual_style}, 
+    {audio_style}, and {emotional_arc}. This specification should be developer-ready, 
+    showing how the planned file layout, naming conventions, and interdependencies 
+    collectively support the vision for "{title}".
   agent: project_manager

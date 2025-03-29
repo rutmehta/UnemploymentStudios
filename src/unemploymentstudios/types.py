@@ -16,7 +16,8 @@ class Character(BaseModel):
 class Level(BaseModel):
     name: str
     description: str
-    difficulty: Literal["Easy", "Medium", "Hard", "Boss"]
+    difficulty: str
+    # difficulty: Literal["Easy", "Medium", "Hard", "Boss"]
     key_objectives: List[str]
     enemies_obstacles: List[str]
     boss_battle: Optional[str] = None

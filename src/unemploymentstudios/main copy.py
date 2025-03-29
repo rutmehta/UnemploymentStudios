@@ -1,16 +1,12 @@
 #!/usr/bin/env python
-from typing import Dict
 from random import randint
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 from crewai.flow import Flow, listen, start
 
 # Import Crews
 from unemploymentstudios.crews.concept_expansion_crew.concept_expansion_crew import ConceptExpansionCrew
 from unemploymentstudios.crews.file_structure_planning_crew.file_structure_planning_crew import FileStructurePlanningCrew
 from unemploymentstudios.crews.general_code_crew.general_code_crew import GeneralCodeCrew
-
-# Import Pydantic Types
-from unemploymentstudios.types import GameConcept
 
 # Additional Imports
 import os
@@ -21,10 +17,6 @@ import json
 # Load concept BEFORE GameState class definition
 with open("/home/admiralx/Desktop/unemploymentstudios/src/unemploymentstudios/knowledge/concept.json") as f:
     concept = json.load(f)
-
-def is_directory(path: str) -> bool:
-    # For example, treat anything that ends in a slash as a directory
-    return path.endswith("/")
 
 class GameState(BaseModel):
     Storyline: str = concept["Storyline"]
@@ -78,91 +70,11 @@ class GameFlow(Flow[GameState]):
 
     @listen(save_concept)
     def file_structure_planning(self):
-        # 1. Parse JSON string into a Pydantic model.
-        expanded_concept = GameConcept(**json.loads(self.state.conceptExpansionOutput))
 
-        # For supporting_characters, turn each Character object into a dict
-        supporting_characters_as_dicts = [char.dict() for char in expanded_concept.supporting_characters]
-        # Same for levels (turn each Level object into a dict)
-        levels_as_dicts = [lvl.dict() for lvl in expanded_concept.levels]
-
-        # Build a dictionary for the base fields (non-list)
-        inputs_dict = {
-            "title": expanded_concept.title,
-            "tagline": expanded_concept.tagline,
-            "overview": expanded_concept.overview,
-            "main_character": expanded_concept.main_character.name,
-            "main_character_name": expanded_concept.main_character.name,
-            "main_character_role": expanded_concept.main_character.role,
-            "main_character_abilities": expanded_concept.main_character.abilities,
-            "main_character_description": expanded_concept.main_character.description,
-            "main_character_emotional_arc": expanded_concept.main_character.emotional_arc,
-            "supporting_characters": supporting_characters_as_dicts,
-            "supporting_characters|length": len(expanded_concept.supporting_characters),
-            "world_building": expanded_concept.world_building,
-            "levels": levels_as_dicts,
-            "levels|length": len(expanded_concept.levels),
-            "gameplay_mechanics": expanded_concept.gameplay_mechanics,
-            "visual_style": expanded_concept.visual_style,
-            "audio_style": expanded_concept.audio_style,
-            "emotional_arc": expanded_concept.emotional_arc,
-            "conclusion": expanded_concept.conclusion,
-        }
-
-        #
-        # 2. Precompute placeholders for each supporting character
-        #
-        character_inputs = {}
-        for idx, char in enumerate(expanded_concept.supporting_characters):
-            prefix = f"supporting_characters_{idx}_"
-            character_inputs[f"{prefix}name"] = char.name
-            character_inputs[f"{prefix}role"] = char.role
-            character_inputs[f"{prefix}description"] = char.description
-            character_inputs[f"{prefix}abilities"] = char.abilities
-            character_inputs[f"{prefix}emotional_arc"] = char.emotional_arc
-
-        #
-        # 3. Precompute placeholders for each level
-        #
-        level_inputs = {}
-        for idx, lvl in enumerate(expanded_concept.levels):
-            prefix = f"levels_{idx}_"
-            level_inputs[f"{prefix}name"] = lvl.name
-            level_inputs[f"{prefix}description"] = lvl.description
-            level_inputs[f"{prefix}difficulty"] = lvl.difficulty
-            level_inputs[f"{prefix}key_objectives"] = lvl.key_objectives
-            level_inputs[f"{prefix}enemies_obstacles"] = lvl.enemies_obstacles
-            level_inputs[f"{prefix}boss_battle"] = lvl.boss_battle
-
-        #
-        # 3a. Also define the first/last-level placeholders that match tasks.yaml
-        #
-        # Only do this if at least one level exists.
-        if expanded_concept.levels:
-            first_level = expanded_concept.levels[0]
-            inputs_dict["first_level_name"] = first_level.name
-            inputs_dict["first_level_difficulty"] = first_level.difficulty
-            inputs_dict["first_level_enemies_obstacles"] = first_level.enemies_obstacles
-
-            # If there's a "last" level distinct from the first, define placeholders from that too:
-            last_level = expanded_concept.levels[-1]
-            inputs_dict["last_level_name"] = last_level.name
-            inputs_dict["last_level_difficulty"] = last_level.difficulty
-            inputs_dict["last_level_boss_battle"] = last_level.boss_battle
-
-            # For tasks referencing all level names in a single string (e.g., {levels_names}):
-            level_names = [lvl.name for lvl in expanded_concept.levels]
-            inputs_dict["levels_names"] = ", ".join(level_names)
-
-        # Merge our custom loops into the main inputs_dict
-        inputs_dict.update(character_inputs)
-        inputs_dict.update(level_inputs)
-
-        # 4. Kick off your crew with the full dictionary of placeholders
         file_structure_planning_raw = (
             FileStructurePlanningCrew()
             .crew()
-            .kickoff(inputs=inputs_dict)
+            .kickoff()
         )
 
         self.state.fileStructurePlanningOutput = file_structure_planning_raw.raw
@@ -197,10 +109,10 @@ class GameFlow(Flow[GameState]):
         file_structure = json.loads(self.state.fileStructurePlanningOutput)
         files = file_structure["files"]  # This is the array of file specs
 
-        # If no files, exit early
-        if not files:
-            print("No files found in file structure, skipping code generation.")
-            return
+        # --- Option B (commented out): Parse into a Pydantic model ---
+        # from your_module import FileStructureSpec
+        # file_structure_spec = FileStructureSpec(**json.loads(self.state.fileStructurePlanningOutput))
+        # files = file_structure_spec.files
 
         tasks = []
 
@@ -264,16 +176,6 @@ class GameFlow(Flow[GameState]):
         # Schedule each file generation as a separate asyncio task
         # Use `files` (the list) in our loop, not `file_structure` (the dict)
         for file_info in files:
-            path = file_info["filename"]
-            if is_directory(path):
-                # Just create the directory, skip writing
-                os.makedirs(path, exist_ok=True)
-            else:
-                # It's a file, so create containing dir and open
-                os.makedirs(os.path.dirname(path), exist_ok=True)
-                with open(path, "w", encoding="utf-8") as f:
-                    f.write(file_info["content"])
-
             print(f"Creating code-writing task for file: {file_info['filename']}")
             task = asyncio.create_task(write_single_file(file_info))
             tasks.append(task)
@@ -297,6 +199,39 @@ class GameFlow(Flow[GameState]):
                 f.write(gf["code"])  # Use gf["code"]
 
         print("=== All code files generated and saved ===")
+
+
+'''
+class PoemState(BaseModel):
+    sentence_count: int = 1
+    poem: str = ""
+
+
+class PoemFlow(Flow[PoemState]):
+
+    @start()
+    def generate_sentence_count(self):
+        print("Generating sentence count")
+        self.state.sentence_count = randint(1, 5)
+
+    @listen(generate_sentence_count)
+    def generate_poem(self):
+        print("Generating poem")
+        result = (
+            PoemCrew()
+            .crew()
+            .kickoff(inputs={"sentence_count": self.state.sentence_count})
+        )
+
+        print("Poem generated", result.raw)
+        self.state.poem = result.raw
+
+    @listen(generate_poem)
+    def save_poem(self):
+        print("Saving poem")
+        with open("poem.txt", "w") as f:
+            f.write(self.state.poem)
+'''
 
 def kickoff():
     game_flow = GameFlow()

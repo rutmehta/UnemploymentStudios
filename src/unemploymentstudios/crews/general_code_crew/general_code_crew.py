@@ -78,72 +78,78 @@ class GeneralCodeCrew:
             llm=self.llm
         )
 
+    @agent
+    def code_finalizer(self) -> Agent:
+        return Agent(
+            config=self.agents_config["code_finalizer"],
+            llm=self.llm
+        )
+
     # --------------------------------------------------
     # TASKS
     # --------------------------------------------------
     @task
-    def analyze_game_concept(self) -> Task:
+    def plan(self) -> Task:
         return Task(
-            config=self.tasks_config["analyze_game_concept"]
+            config=self.tasks_config["plan"]
             # llm = self.llm
         )
 
     @task
-    def identify_required_files(self) -> Task:
+    def generate_draft(self) -> Task:
         return Task(
-            config=self.tasks_config["identify_required_files"],
-            context=[self.analyze_game_concept()]
+            config=self.tasks_config["generate_draft"],
+            context=[self.plan()]
             # llm = self.llm
         )
 
     @task
-    def clarify_file_purposes(self) -> Task:
+    def review_and_refine_full_stack(self) -> Task:
         return Task(
-            config=self.tasks_config["clarify_file_purposes"],
+            config=self.tasks_config["review_and_refine_full_stack"],
             context=[
-                self.analyze_game_concept(), 
-                self.identify_required_files()
+                self.plan(), 
+                self.generate_draft()
             ]
             # llm = self.llm
         )
 
     @task
-    def define_content_guidelines(self) -> Task:
+    def review_and_refine_javascript(self) -> Task:
         return Task(
-            config=self.tasks_config["define_content_guidelines"],
+            config=self.tasks_config["review_and_refine_javascript"],
             context=[
-                self.analyze_game_concept(), 
-                self.identify_required_files(), 
-                self.clarify_file_purposes()
+                self.plan(), 
+                self.generate_draft(), 
+                self.review_and_refine_full_stack()
             ]
             # llm = self.llm
         )
 
     @task
-    def map_file_dependencies(self) -> Task:
+    def review_and_refine_ui_ux(self) -> Task:
         return Task(
-            config=self.tasks_config["map_file_dependencies"],
+            config=self.tasks_config["review_and_refine_ui_ux"],
             context=[
-                self.analyze_game_concept(),
-                self.identify_required_files(),
-                self.clarify_file_purposes(),
-                self.define_content_guidelines()
+                self.plan(),
+                self.generate_draft(),
+                self.review_and_refine_full_stack(),
+                self.review_and_refine_javascript()
             ]
             # llm = self.llm
         )
 
     @task
-    def compile_final_file_structure_spec(self) -> Task:
+    def finalize_output(self) -> Task:
         return Task(
-            config=self.tasks_config["compile_final_file_structure_spec"],
+            config=self.tasks_config["finalize_output"],
             context=[
-                self.analyze_game_concept(),
-                self.identify_required_files(),
-                self.clarify_file_purposes(),
-                self.define_content_guidelines(),
-                self.map_file_dependencies()
+                self.plan(),
+                self.generate_draft(),
+                self.review_and_refine_full_stack(),
+                self.review_and_refine_javascript(),
+                self.review_and_refine_ui_ux()
             ],
-            output_pydantic=GameFile
             # llm = self.llm
         )
 

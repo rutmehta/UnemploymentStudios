@@ -143,13 +143,13 @@ class FileStructurePlanningCrew:
     def crew(self) -> Crew:
         """Create the crew"""
         return Crew(
-            # agents=self.agents,
-            agents=[agent for agent in self.agents if agent != self.project_manager()],
+            agents=self.agents,
+            # agents=[agent for agent in self.agents if agent != self.project_manager()],
             tasks=self.tasks,
-            # process=Process.sequential,
-            process=Process.hierarchical,
-            manager_agent = self.project_manager(),
-            manager_llm = self.llm,
+            process=Process.sequential,
+            # process=Process.hierarchical,
+            # manager_agent = self.project_manager(),
+            # manager_llm = self.llm,
             # function_calling_llm=self.llm,
             # planning=True,
             # planning_llm=self.llm,

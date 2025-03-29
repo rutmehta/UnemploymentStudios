@@ -1,0 +1,132 @@
+{
+  "filename": "FileStructureSpec",
+  "filetype": "object",
+  "content": {
+    "structure": [
+      {
+        "filename": "index.html",
+        "purpose": "Serves as the main entry point for the game.",
+        "content_guidelines": [
+          "Basic HTML5 Document with <!DOCTYPE html>, <html>, <head>, <body>.",
+          "Meta Tags for responsive design and charset.",
+          "Contains <canvas id=\"gameCanvas\"> for rendering.",
+          "Links necessary scripts and stylesheets using <link> and <script async>.",
+          "Initial loading sequence to start main.js."
+        ],
+        "dependencies": []
+      },
+      {
+        "filename": "main.js",
+        "purpose": "Manages the game's initialization.",
+        "content_guidelines": [
+          "Setup initial game state, canvas, and context.",
+          "Import various game modules using import statements.",
+          "Initialize the game loop.",
+          "Maintain global states like score and current level."
+        ],
+        "dependencies": ["index.html"]
+      },
+      {
+        "filename": "gameLoop.js",
+        "purpose": "Handles the game's frame cycle.",
+        "content_guidelines": [
+          "Use window.requestAnimationFrame() for smooth frames.",
+          "Control FPS with time-based calculations.",
+          "Methods for updating game state and rendering visuals."
+        ],
+        "dependencies": ["main.js"]
+      },
+      {
+        "filename": "characterManager.js",
+        "purpose": "Centralizes character-related operations.",
+        "content_guidelines": [
+          "Define character structure (health, abilities).",
+          "Functions for CRUD operations on characters.",
+          "Incorporate modular components for reusability."
+        ],
+        "dependencies": ["main.js"]
+      },
+      {
+        "filename": "eventSystem.js",
+        "purpose": "Manages game events and interactions.",
+        "content_guidelines": [
+          "Register, emit, and handle game events.",
+          "Integrate with storyline for narrative progress.",
+          "Manage dynamic interaction across elements."
+        ],
+        "dependencies": []
+      },
+      {
+        "filename": "assetLoader.js",
+        "purpose": "Handles asynchronous loading of game assets.",
+        "content_guidelines": [
+          "Use Promises or async/await for non-blocking loads.",
+          "Implement caching strategies.",
+          "Resource initialization to trigger readiness events."
+        ],
+        "dependencies": ["main.js"]
+      },
+      {
+        "filename": "inputHandler.js",
+        "purpose": "Manages user inputs efficiently.",
+        "content_guidelines": [
+          "Implement debounce logic.",
+          "Standardize input events.",
+          "Listen and respond to user actions."
+        ],
+        "dependencies": ["main.js"]
+      },
+      {
+        "filename": "UIManager.js",
+        "purpose": "Oversees UI rendering and updating.",
+        "content_guidelines": [
+          "Render UI components based on states.",
+          "Use CSS for responsive layouts.",
+          "Bind UI with interactions via events."
+        ],
+        "dependencies": []
+      },
+      {
+        "filename": "physicsEngine.js",
+        "purpose": "Manages game physics calculations.",
+        "content_guidelines": [
+          "Implementation for collision detection.",
+          "Routines for physical simulations like movement.",
+          "Utilize spatial partitioning for performance."
+        ],
+        "dependencies": ["gameLoop.js"]
+      },
+      {
+        "filename": "soundManager.js",
+        "purpose": "Coordinates game audio.",
+        "content_guidelines": [
+          "Setup audio context with Web Audio API.",
+          "Functions for controlling sound effects.",
+          "Manage dynamic audio mixing."
+        ],
+        "dependencies": ["main.js"]
+      },
+      {
+        "filename": "storyManager.js",
+        "purpose": "Oversees narrative progression using state machines.",
+        "content_guidelines": [
+          "Integrate player choices with narrative flow.",
+          "Interface with event system for story events.",
+          "Adapt storyline dynamically."
+        ],
+        "dependencies": []
+      },
+      {
+        "filename": "buildTools.js",
+        "purpose": "Handles pre-deployment asset optimization.",
+        "content_guidelines": [
+          "Use build tools (Webpack) for asset bundling.",
+          "Minify scripts and styles.",
+          "Configure performance strategies like lazy loading."
+        ],
+        "dependencies": []
+      }
+    ]
+  },
+  "status": "Completed"
+}

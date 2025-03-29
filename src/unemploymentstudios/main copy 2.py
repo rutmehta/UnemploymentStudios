@@ -22,10 +22,6 @@ import json
 with open("/home/admiralx/Desktop/unemploymentstudios/src/unemploymentstudios/knowledge/concept.json") as f:
     concept = json.load(f)
 
-def is_directory(path: str) -> bool:
-    # For example, treat anything that ends in a slash as a directory
-    return path.endswith("/")
-
 class GameState(BaseModel):
     Storyline: str = concept["Storyline"]
     Game_Mechanics: str = concept["Game mechanics"]
@@ -165,6 +161,31 @@ class GameFlow(Flow[GameState]):
             .kickoff(inputs=inputs_dict)
         )
 
+        '''
+        # 1. Parse the JSON string from conceptExpansionOutput into a dict
+        expanded_concept_data = json.loads(self.state.conceptExpansionOutput)
+
+        # 2. Pass the individual fields to the FileStructurePlanningCrew
+        file_structure_planning_raw = (
+            FileStructurePlanningCrew()
+            .crew()
+            .kickoff(inputs={
+                "title": expanded_concept_data["title"],
+                "tagline": expanded_concept_data["tagline"],
+                "overview": expanded_concept_data["overview"],
+                "main_character": expanded_concept_data["main_character"],
+                "supporting_characters": expanded_concept_data["supporting_characters"],
+                "world_building": expanded_concept_data["world_building"],
+                "levels": expanded_concept_data["levels"],
+                "gameplay_mechanics": expanded_concept_data["gameplay_mechanics"],
+                "visual_style": expanded_concept_data["visual_style"],
+                "audio_style": expanded_concept_data["audio_style"],
+                "emotional_arc": expanded_concept_data["emotional_arc"],
+                "conclusion": expanded_concept_data["conclusion"],
+            })
+        )
+        '''
+
         self.state.fileStructurePlanningOutput = file_structure_planning_raw.raw
 
     @listen(file_structure_planning)
@@ -185,10 +206,11 @@ class GameFlow(Flow[GameState]):
     @listen(save_file_structure)
     async def write_code_files(self):
         """
-        Parse the file structure planning output, 
-        spawn an async writing job for each file, and await them concurrently.
+        Parse the file structure planning output,
+        spawn ONE code-writing crew just for the first file,
+        and save the result to disk.
         """
-        print("=== Generating code files concurrently ===")
+        print("=== Generating code for the first file only ===")
 
         # Parse the file structure planning output into a Python list or dict
         # Adjust the parsing to match whatever data shape you get back
@@ -202,9 +224,9 @@ class GameFlow(Flow[GameState]):
             print("No files found in file structure, skipping code generation.")
             return
 
-        tasks = []
+        # We'll only generate code for the FIRST file
+        first_file_info = files[0]
 
-        # Simple helper to guess filetype from filename or path
         def guess_filetype(filename: str) -> str:
             filename_lower = filename.lower()
             if filename_lower.endswith(".html"):
@@ -231,9 +253,9 @@ class GameFlow(Flow[GameState]):
             "asset": "Asset Crew"
         }
 
-        # Define an inner async function that spawns a single code-writing crew
+        # Inner async function to write a single file
         async def write_single_file(file_info):
-            # Kick off a dedicated code-writing crew for this file
+            # Kick off the dedicated code-writing crew for this single file
             result = (
                 GeneralCodeCrew()
                 .crew()
@@ -261,42 +283,55 @@ class GameFlow(Flow[GameState]):
                 "responsible_crew": responsible_crew        # e.g. "Core JavaScript Crew"
             }
 
-        # Schedule each file generation as a separate asyncio task
-        # Use `files` (the list) in our loop, not `file_structure` (the dict)
-        for file_info in files:
-            path = file_info["filename"]
-            if is_directory(path):
-                # Just create the directory, skip writing
-                os.makedirs(path, exist_ok=True)
-            else:
-                # It's a file, so create containing dir and open
-                os.makedirs(os.path.dirname(path), exist_ok=True)
-                with open(path, "w", encoding="utf-8") as f:
-                    f.write(file_info["content"])
+        # Actually generate the code for just this one file
+        gf = await write_single_file(first_file_info)
 
-            print(f"Creating code-writing task for file: {file_info['filename']}")
-            task = asyncio.create_task(write_single_file(file_info))
-            tasks.append(task)
+        # Save the code in the state
+        self.state.generatedCodeFiles[gf["filename"]] = gf["code"]
 
-        generated_files = await asyncio.gather(*tasks)
-
-        # Make sure you have a place to store them in state (if desired)
-        # If your GameState has generatedCodeFiles = Field(default_factory=dict):
-        for gf in generated_files:
-            # Save the code in the state
-            self.state.generatedCodeFiles[gf["filename"]] = gf["code"]
-
-        # Now write each generated file to disk
+        # Write the generated file to disk
         output_dir = "./Game"
         os.makedirs(output_dir, exist_ok=True)
 
-        for gf in generated_files:
-            path = os.path.join(output_dir, gf["filename"])
-            print(f"Saving generated code to {path}")
-            with open(path, "w", encoding="utf-8") as f:
-                f.write(gf["code"])  # Use gf["code"]
+        path = os.path.join(output_dir, gf["filename"])
+        print(f"Saving generated code to {path}")
+        with open(path, "w", encoding="utf-8") as f:
+            f.write(gf["code"])
 
-        print("=== All code files generated and saved ===")
+        print("=== Single code file generated and saved ===")
+
+
+'''
+class PoemState(BaseModel):
+    sentence_count: int = 1
+    poem: str = ""
+
+
+class PoemFlow(Flow[PoemState]):
+
+    @start()
+    def generate_sentence_count(self):
+        print("Generating sentence count")
+        self.state.sentence_count = randint(1, 5)
+
+    @listen(generate_sentence_count)
+    def generate_poem(self):
+        print("Generating poem")
+        result = (
+            PoemCrew()
+            .crew()
+            .kickoff(inputs={"sentence_count": self.state.sentence_count})
+        )
+
+        print("Poem generated", result.raw)
+        self.state.poem = result.raw
+
+    @listen(generate_poem)
+    def save_poem(self):
+        print("Saving poem")
+        with open("poem.txt", "w") as f:
+            f.write(self.state.poem)
+'''
 
 def kickoff():
     game_flow = GameFlow()

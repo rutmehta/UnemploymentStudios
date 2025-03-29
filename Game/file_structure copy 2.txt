@@ -1,0 +1,100 @@
+{
+  "files": [
+    {
+      "filename": "index.html",
+      "purpose": "The backbone HTML file to initiate the game, loading essential JavaScript and CSS files for a complete setup.",
+      "content_guidelines": "Document structure with DOCTYPE, head linking CSS/JS, and body for main visuals.",
+      "dependencies": []
+    },
+    {
+      "filename": "style.css",
+      "purpose": "Dictates visual styles for the game’s layout and UI components.",
+      "content_guidelines": "Global styles, element-specific rules, responsive design features.",
+      "dependencies": []
+    },
+    {
+      "filename": "game.js",
+      "purpose": "Manages the core game logic and the main loop, integrating components and game states.",
+      "content_guidelines": "Implement main loop, manage game states, tie in components.",
+      "dependencies": []
+    },
+    {
+      "filename": "boot.js",
+      "purpose": "Sets up initial game settings and launches the preloader.",
+      "content_guidelines": "Config settings, global var definitions, transition to preloader.",
+      "dependencies": []
+    },
+    {
+      "filename": "preloader.js",
+      "purpose": "Manages asset loading before game start, ensuring readiness.",
+      "content_guidelines": "Load assets, display progress, handle errors.",
+      "dependencies": []
+    },
+    {
+      "filename": "music.js",
+      "purpose": "Controls background music and sound levels.",
+      "content_guidelines": "Play, pause, adjust volume, manage tracks.",
+      "dependencies": []
+    },
+    {
+      "filename": "mainmenu.js",
+      "purpose": "Handles interactions in the main menu and transitions to gameplay.",
+      "content_guidelines": "Setup UI, listener events for navigation, manage screen transitions.",
+      "dependencies": []
+    },
+    {
+      "filename": "ai.js",
+      "purpose": "Defines AI behavior, particularly NPC movements and decisions.",
+      "content_guidelines": "AI algorithms, patterns, extendable behavior sets.",
+      "dependencies": []
+    },
+    {
+      "filename": "dialogue.js",
+      "purpose": "Handles in-game dialogue and supports localization.",
+      "content_guidelines": "Display scripts, support branching trees, integrate localization.",
+      "dependencies": []
+    },
+    {
+      "filename": "physics.js",
+      "purpose": "Simulates physics actions like collisions and kinetics.",
+      "content_guidelines": "Physics engine setup, collision and force calculations.",
+      "dependencies": []
+    },
+    {
+      "filename": "combat.js",
+      "purpose": "Manages combat, including hit detection and player/NPC stats.",
+      "content_guidelines": "State management for combat, handle hits and health updates.",
+      "dependencies": []
+    },
+    {
+      "filename": "crafting.js",
+      "purpose": "Facilitates crafting systems, handling resources and item creation.",
+      "content_guidelines": "Track resources, define recipes, manage GUI updates.",
+      "dependencies": []
+    },
+    {
+      "filename": "Assets",
+      "purpose": "Organized repository for all game assets like characters, environment, and audio.",
+      "content_guidelines": "Categories for characters (models, textures), environment (scenes, materials), and audio (sfx, music).",
+      "dependencies": []
+    },
+    {
+      "filename": "Storyline",
+      "purpose": "Document narrative structure and progression.",
+      "content_guidelines": "Plot outlines, character profiles, world-building details.",
+      "dependencies": []
+    },
+    {
+      "filename": "Dialogue",
+      "purpose": "Store character dialogues and branching narrative paths.",
+      "content_guidelines": "Transcriptions, dialogue trees, performance notes.",
+      "dependencies": []
+    },
+    {
+      "filename": "Prefabs",
+      "purpose": "Reusable game components facilitating design consistency.",
+      "content_guidelines": "Inventory list, construction blueprints, optimization guidelines.",
+      "dependencies": []
+    }
+  ]
+}

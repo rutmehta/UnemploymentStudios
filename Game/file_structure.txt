@@ -1,43 +1,82 @@
 {
-  "files": [{
-    "filename": "index.html",
-    "purpose": "Serves as the main entry point for the game’s web structure. It links together all other resources, such as CSS stylesheets, JavaScript files, and multimedia content, ensuring everything is loaded correctly for the player.",
-    "content_guidelines": "Utilize semantic HTML5 elements for accessibility and clarity. Keep HTML files focused on structure, avoiding inline styles or scripts.",
-    "dependencies": ["style.css", "boot.js", "preloader.js", "game.js", "music.js", "mainmenu.js"]
-  }, {
-    "filename": "style.css",
-    "purpose": "Manages the visual presentation of the game's user interface, including the layout, colors, fonts, and other stylistic elements.",
-    "content_guidelines": "Adopt a modular CSS design using individual stylesheets for components (e.g., UI, character-specific styles), and a separate file for responsive design. Use a consistent class naming convention.",
-    "dependencies": null
-  }, {
-    "filename": "boot.js",
-    "purpose": "Responsible for initializing the game environment. It sets up necessary game configurations, preloads essential assets, and sets the stage for transitioning to the main game loop.",
-    "content_guidelines": "Ensure all settings are configured before asset loading begins, setting global variables and parameters used in game.js and by the preloader.",
-    "dependencies": ["index.html"]
-  }, {
-    "filename": "preloader.js",
-    "purpose": "Manages preloading of game assets (both visual and audio).",
-    "content_guidelines": "Ensure all necessary assets are loaded and ready for game.js.",
-    "dependencies": ["boot.js", "various assets in Characters, NPCs, etc."]
-  }, {
-    "filename": "game.js",
-    "purpose": "Contains the core game logic, handling game state updates, player interactions, and the main game loop.",
-    "content_guidelines": "Utilizes modern coding standards (ES6+) with a focus on maintaining clean architecture with clear classes/functions. Use modular ES6+ syntax with consistent naming, comments, and arrow functions.",
-    "dependencies": ["preloader.js", "boot.js"]
-  }, {
-    "filename": "music.js",
-    "purpose": "Manages in-game audio control, including background music and sound effects.",
-    "content_guidelines": "Harmonize background music and sound effects to augment player immersion.",
-    "dependencies": ["preloader.js"]
-  }, {
-    "filename": "mainmenu.js",
-    "purpose": "Handles the main menu functionalities and UI transitions.",
-    "content_guidelines": "Handles user navigation from the main interface through transitions managed by game.js.",
-    "dependencies": ["preloader.js"]
-  }, {
-    "filename": "assets",
-    "purpose": "Static resources needed for the game including images, audio, and data files used by other components.",
-    "content_guidelines": "Structure assets in directories for efficient texture management and rapid updating or swapping.",
-    "dependencies": null
-  }]
+  "files": [
+    {
+      "filename": "index.html",
+      "purpose": "Initiates the player's immersive journey into Alex Thompson's world by loading the game into the web browser.",
+      "content_guidelines": "Sets the structure for game scripts and links style and main game scripts.",
+      "dependencies": ["style.css", "main.js"]
+    },
+    {
+      "filename": "style.css",
+      "purpose": "Governs all global styles for the game while adhering to the pixel art aesthetic.",
+      "content_guidelines": "Ensures the design is consistent with the game's nostalgic, modern feel for visual immersion.",
+      "dependencies": null
+    },
+    {
+      "filename": "main.js",
+      "purpose": "Initializes the game and connects various gaming scripts, acting as the central hub for gameplay.",
+      "content_guidelines": "Facilitates smooth running of Alex's adventures across different levels.",
+      "dependencies": ["game.js", "music.js", "boot.js", "preloader.js"]
+    },
+    {
+      "filename": "boot.js",
+      "purpose": "Manages initial setup and configuration before the game begins.",
+      "content_guidelines": "Ensures settings like resolution and UI scale are set for a seamless gaming experience.",
+      "dependencies": null
+    },
+    {
+      "filename": "preloader.js",
+      "purpose": "Handles the preloading of assets to ensure seamless gameplay transitions.",
+      "content_guidelines": "Ensures all necessary assets are loaded before main game features are initiated.",
+      "dependencies": ["main.js", "game.js"]
+    },
+    {
+      "filename": "game.js",
+      "purpose": "Houses the central game loop logic, executing gameplay mechanics and managing state transitions.",
+      "content_guidelines": "Ensures continuous engagement and seamless flow of gameplay.",
+      "dependencies": ["mechanics/navigation/", "mechanics/platforms/", "characters/alex/abilities/"]
+    },
+    {
+      "filename": "music.js",
+      "purpose": "Controls audio playback and dynamically adjusts intensity to match gameplay segments.",
+      "content_guidelines": "Defines how background music evolves from ambient tasks to boss battles.",
+      "dependencies": ["assets/sound/", "sound/dynamic/"]
+    },
+    {
+      "filename": "characters/alex/abilities/",
+      "purpose": "Contains scripts for Alex's abilities, ensuring realistic implementation of skills.",
+      "content_guidelines": "Provides context for abilities like 'code_collection' and 'debug_dash'.",
+      "dependencies": ["mechanics/skill_points/"]
+    },
+    {
+      "filename": "characters/alex/assets/",
+      "purpose": "Holds visual assets of Alex, maintaining consistency with retro theme aesthetics.",
+      "content_guidelines": "Storage for all sprite images and animations used in game scenes.",
+      "dependencies": null
+    },
+    {
+      "filename": "mechanics/navigation/",
+      "purpose": "Contains algorithms for character movement such as running, jumping, and dodging.",
+      "content_guidelines": "Defines core movement mechanics influencing user interaction with levels.",
+      "dependencies": ["game.js"]
+    },
+    {
+      "filename": "enemies/procrastination_monster/",
+      "purpose": "Manages scripts and assets defining these symbolic obstacles.",
+      "content_guidelines": "Ensures a consistent challenge symbolizing Alex's time management issues.",
+      "dependencies": ["game.js"]
+    },
+    {
+      "filename": "assets/pixel_art/",
+      "purpose": "Repository for all pixel art assets including sprites for characters and environments.",
+      "content_guidelines": "Reinforces aesthetic cohesion and nostalgic visual engagement.",
+      "dependencies": null
+    },
+    {
+      "filename": "narrative/dialogues/",
+      "purpose": "Stores scripting files for in-game conversations.",
+      "content_guidelines": "Facilitates emotional and narrative progression with key character interactions.",
+      "dependencies": ["narrative/events/"]
+    }
+  ]
 }

@@ -1,66 +1,77 @@
-analyze_game_concept:
+plan:
   description: >
-    You (as the Full Stack Developer) are responsible for carefully analyzing the 
-    overall game concept, along with any provided file list or project details. 
-    This includes noting characters, storyline elements, gameplay mechanics, and 
-    visual/audio styles, with the goal of informing upcoming technical decisions.
+    You (as the planning agent) are responsible for outlining how {filename} will be structured 
+    and what it should contain, based on:
+      - Overall purpose: {purpose}
+      - Guidelines: {content_guidelines}
+      - Dependencies: {dependencies}
+
+    Focus on the high-level layout, sections required, and how the file will integrate 
+    with its dependencies. Do not include any actual code at this stage—just a clear 
+    textual plan.
   expected_output: >
-    A structured summary that highlights essential details influencing
-    the technical file organization and implementation strategy.
+    A concise outline describing the intended elements of {filename}, their order 
+    or layout, and how they address {purpose}, {content_guidelines}, and any 
+    requirements from {dependencies}.
   agent: full_stack_developer
 
-identify_required_files:
+generate_draft:
   description: >
-    You (as the Full Stack Developer) determine all necessary files for this 
-    HTML5 game. Based on the project's scope, you decide on core files 
-    (like HTML, CSS, and JavaScript) as well as any specialized files needed 
-    for mechanics, media assets, or additional game functionalities.
-  expected_output: >
-    A comprehensive list of essential and recommended game files, with clear
-    names and brief justifications for each (e.g., index.html, style.css, 
-    game.js, boot.js, etc.).
-  agent: full_stack_developer
+    You (as the drafting agent) will create the initial code for {filename} 
+    according to the plan. Adhere closely to:
+      - {purpose}
+      - {content_guidelines}
+      - {dependencies}
 
-clarify_file_purposes:
-  description: >
-    You (as the JavaScript Developer) articulate each identified file’s purpose 
-    in the broader codebase. Ensuring the team understands the exact role and function
-    of each file is crucial to maintaining clarity and preventing overlap.
+    Provide a valid, working code draft (e.g., HTML, JS, etc.) that is ready to 
+    be refined. Include only what's necessary to fulfill the file's stated function.
   expected_output: >
-    A detailed purpose statement for each file, with enough clarity for developers
-    and designers to quickly grasp what should go into each file and why.
+    A code draft for {filename}, following the plan from the "plan" task and 
+    implementing all essential elements.
   agent: javascript_developer
 
-define_content_guidelines:
+review_and_refine_full_stack:
   description: >
-    You (as the JavaScript Developer) specify the logic, structure, and core 
-    styles each file must contain. Guidelines must align with the analyzed
-    game concept, ensuring consistency in implementing gameplay, visuals, 
-    and audio across the codebase.
-  expected_output: >
-    A structured set of content guidelines for every listed file, clearly outlining
-    the required elements and how they should be implemented or styled.
-  agent: javascript_developer
+    You (as the full-stack developer) will review the drafted code for overall 
+    structure, best practices, and integration points. Ensure that {filename} 
+    remains faithful to its purpose and guidelines without adding new, unrelated 
+    features.
 
-map_file_dependencies:
-  description: >
-    You (as the Full Stack Developer) outline how all files interact and depend on 
-    each other, specifying loading sequences, runtime interactions, and data flows 
-    (e.g., game.js depends on assets preloaded by preloader.js). Your architectural 
-    overview ensures a coherent and maintainable code structure.
+    Adjust or refine the code to improve maintainability, deployment readiness, 
+    and seamless interaction with {dependencies}.
   expected_output: >
-    An explicit dependency map that details which files rely on others, how they
-    interact, and in what order they should be initialized.
+    An updated version of {filename} that maintains the original scope but 
+    is structurally sound and ready for further specialization.
   agent: full_stack_developer
 
-compile_final_file_structure_spec:
+review_and_refine_javascript:
   description: >
-    You (as the UI/UX Designer) consolidate all previous outputs into a final 
-    FileStructureSpec object, ensuring each file's name, purpose, content guidelines, 
-    and dependencies are clearly documented. While the focus is typically on visuals,
-    your unique perspective ensures the final documentation is clear and user-friendly.
+    You (as the JavaScript developer) will examine the code for logical flow, 
+    efficient interactivity, and clean, maintainable scripts (if applicable). 
+    Ensure best practices in JS coding style, performance, and bug avoidance.
   expected_output: >
-    A single, well-structured FileStructureSpec object that incorporates all
-    decisions made in earlier tasks, ready for seamless handoff and implementation
-    by the development team.
+    An updated version of {filename}, refined to enhance or optimize any 
+    JavaScript-related sections without changing the file’s core purpose.
+  agent: javascript_developer
+
+review_and_refine_ui_ux:
+  description: >
+    You (as the UI/UX designer) are responsible for verifying that {filename} 
+    aligns with sound design and usability principles. Focus on layout clarity, 
+    visual hierarchy, and user-friendliness. Propose or apply adjustments that 
+    improve the overall experience but do not expand beyond the file’s 
+    stated function.
+  expected_output: >
+    A polished version of {filename} that maintains usability, readability, 
+    and design cohesion, still within its intended scope.
   agent: ui_ux_designer
+
+finalize_output:
+  description: >
+    You (as the finalizing agent) must produce the final code for {filename}, 
+    ensuring the output is strictly the raw code only—without additional comments, 
+    metadata, or formatting. Do not introduce new functionality or content; simply 
+    finalize the existing work into a clean, production-ready file.
+  expected_output: >
+    The final, ready-to-use code for {filename} with no extra commentary.
+  agent: code_finalizer
