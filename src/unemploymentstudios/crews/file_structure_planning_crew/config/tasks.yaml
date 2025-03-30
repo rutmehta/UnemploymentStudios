@@ -76,13 +76,17 @@ map_file_dependencies:
     {levels}, and mainmenu.js might reference storyline segments from {overview}. 
     Indicate the runtime interactions that enable character progression for 
     {main_character_name} and detail any special considerations for loading 
-    audio tracks matching {audio_style}.
+    audio tracks matching {audio_style}. Carefully review all dependency references 
+    and ensure that any file mentioned (e.g., mechanics/aiChallenges.js) is also 
+    formally added to the file structure if not already present.
   expected_output: >
     An explicit dependency map that clearly shows how each file interacts with the 
     rest—e.g., in what order files should be initialized, which files handle data 
     for the advanced mechanics in {gameplay_mechanics}, or how the ending cinematic 
-    referencing {conclusion} is triggered after the final boss battle. Highlight 
-    any circular dependencies or high-level flows essential to gameplay.
+    referencing {conclusion} is triggered after the final boss battle. 
+    If any dependency is mentioned but not yet included in the structure, 
+    add it and define its role within the architecture. This ensures no missing 
+    pieces in the dependency graph.
   agent: system_architect
 
 compile_final_file_structure_spec:
@@ -91,13 +95,17 @@ compile_final_file_structure_spec:
     detailed FileStructureSpec object for "{title}". It should reflect the entire 
     journey from {overview} to the conclusion in {conclusion}, the roles of 
     {main_character_name} and {supporting_characters}, as well as how {levels} 
-    progress in difficulty. This final output should thoroughly define each file’s 
-    name, purpose, content guidelines, and dependencies in one coherent reference 
-    document.
+    progress in difficulty. Perform a final validation pass to ensure that every file 
+    referenced as a dependency—across all tasks—is formally included and defined in 
+    the file structure. This includes verifying files mentioned in dependency lists 
+    that may not have been captured in earlier stages.
   expected_output: >
     A fully structured and finalized FileStructureSpec object, incorporating references 
     to any relevant boss battles (e.g., {last_level_boss_battle}), {visual_style}, 
     {audio_style}, and {emotional_arc}. This specification should be developer-ready, 
     showing how the planned file layout, naming conventions, and interdependencies 
-    collectively support the vision for "{title}".
+    collectively support the vision for "{title}". 
+    Conduct a final verification to confirm that all files referenced anywhere as 
+    dependencies—such as script modules, asset folders, or supporting logic—are 
+    present, properly defined, and not missing from the structure.
   agent: project_manager
