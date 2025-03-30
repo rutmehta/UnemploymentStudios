@@ -1,24 +1,21 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Embark on an immersive journey into Alex Thompson's world through this interactive HTML5 game.">
-    <title>Alex Thompson's World</title>
+    <title>CS Student Job Quest</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Include Phaser game engine -->
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.min.js"></script>
 </head>
 <body>
-    <header>
-        <h1>Welcome to Alex Thompson's World</h1>
-        <p>Your journey begins here. Prepare yourself for an exciting adventure!</p>
-    </header>
-    <div id="loading-screen">
-        <p>Loading game assets, please wait...</p>
+    <div id="game-container"></div>
+    <div id="game-ui">
+        <div id="skill-points">Skill Points: <span id="sp-count">0</span></div>
+        <div id="level-info">Level: <span id="level-name">Intro to Programming</span></div>
     </div>
-    <main id="game-container">
-    </main>
-    <script src="main.js" defer></script>
+    
+    <!-- Game Scripts -->
+    <script src="game.js"></script>
 </body>
 </html>
-```

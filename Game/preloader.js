@@ -1,73 +1,78 @@
 ```javascript
-import { initializeGame } from './main.js';
-import { startGame } from './game.js';
-
-const assets = [
-    'image1.png',
-    'image2.png',
-    'sound1.mp3',
-    'sound2.mp3',
-    'data1.json'
+const imageAssets = [
+  'images/sprite1.png',
+  'images/sprite2.png'
 ];
 
+const audioAssets = [
+  'audio/background.mp3',
+  'audio/click-sound.wav'
+];
+
+const jsonDependencies = [
+  'levels/intro_to_programming.json',
+  'levels/advanced_algorithms.json',
+  'levels/internship_experience.json',
+  'levels/final_job_interview.json'
+];
+
+function loadAsset(path) {
+  return new Promise((resolve, reject) => {
+    const extension = path.split('.').pop();
+    if (['png', 'jpg', 'jpeg', 'gif'].includes(extension)) {
+      const img = new Image();
+      img.onload = () => resolve(path);
+      img.onerror = () => reject(new Error(`Failed to load image: ${path}`));
+      img.src = path;
+    } else if (['mp3', 'wav', 'ogg'].includes(extension)) {
+      const audio = new Audio();
+      audio.onloadeddata = () => resolve(path);
+      audio.onerror = () => reject(new Error(`Failed to load audio: ${path}`));
+      audio.src = path;
+    } else if (extension === 'json') {
+      fetch(path)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`Failed to load JSON: ${path}`);
+          }
+          return response.json();
+        })
+        .then(data => resolve(data))
+        .catch(error => reject(error));
+    } else {
+      reject(new Error(`Unsupported asset type: ${path}`));
+    }
+  });
+}
+
 function preloadAssets() {
-    let loadedAssets = 0;
+  const allAssets = [...imageAssets, ...audioAssets, ...jsonDependencies];
+  const promises = allAssets.map(asset => loadAsset(asset).catch(error => {
+    console.error(error);
+    return null;
+  }));
 
-    const loadAsset = (asset) => {
-        return new Promise((resolve, reject) => {
-            const assetType = asset.split('.').pop();
-
-            let element;
-            switch (assetType) {
-                case 'png':
-                    element = new Image();
-                    element.src = asset;
-                    break;
-
-                case 'mp3':
-                    element = new Audio();
-                    element.src = asset;
-                    break;
-
-                case 'json':
-                    fetch(asset)
-                        .then(response => response.json())
-                        .then(data => resolve(data))
-                        .catch(error => reject(error));
-                    break;
-                default:
-                    reject(`Unsupported asset type: ${assetType}`);
-                    return;
-            }
-
-            if (element) {
-                element.onload = () => resolve(element);
-                element.onerror = () => reject(`Failed to load asset: ${asset}`);
-            }
-        });
-    };
-
-    const assetPromises = assets.map(asset => 
-        loadAsset(asset).then(() => {
-            loadedAssets++;
-            console.log(`Loaded ${loadedAssets}/${assets.length} assets`);
-        })
-    );
-
-    Promise.all(assetPromises)
-        .then(() => {
-            console.log('All assets loaded');
-            initializeGame();
-            startGame();
-        })
-        .catch(error => {
-            handleLoadingError(error);
-        });
+  return Promise.all(promises);
 }
 
-function handleLoadingError(error) {
-    console.error("Asset load error: ", error);
-}
+preloadAssets().then(results => {
+  const failedAssets = results.filter(result => result === null);
+  if (failedAssets.length === 0) {
+    console.log('All assets preloaded successfully.');
+    document.dispatchEvent(new Event('assetsLoaded'));
+  } else {
+    console.warn('Some assets failed to preload:', failedAssets);
+    document.dispatchEvent(new Event('assetsLoadedWithErrors'));
+  }
+}).catch(error => {
+  console.error('Error during preloading process:', error);
+});
 
-export { preloadAssets };
+document.addEventListener('assetsLoaded', () => {
+  console.log('Game can now start!');
+});
+
+document.addEventListener('assetsLoadedWithErrors', () => {
+  console.warn('Game starting with missing assets!');
+});
 ```

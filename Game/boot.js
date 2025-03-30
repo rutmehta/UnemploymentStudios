@@ -1,55 +1,64 @@
 ```javascript
 // boot.js
-// This file manages the initial setup and configuration before the game begins.
-// It ensures optimal settings such as resolution and UI scale for a seamless gaming experience.
+/*
+ * File Overview and Purpose:
+ * This file is responsible for setting up initial game configurations and global variables.
+ * It prepares the game engine for resource loading, establishing a solid foundation for the game lifecycle.
+ * Any developer reading this file should immediately understand its purpose and importance.
+ */
 
-class Boot {
-    constructor() {
-        this.initializeGameEnvironment();
-    }
+// Global Variables Definition
+var GAME_WIDTH = 800;
+var GAME_HEIGHT = 600;
+var DEBUG_MODE = true; // Enable for logging debug information
 
-    initializeGameEnvironment() {
-        console.log("Initializing game environment");
-        this.setupResolution();
-        this.configureUIScale();
-        this.loadResources();
+// Game Configuration Object
+var gameConfig = {
+  type: Phaser.AUTO, // Automatically choose the best rendering mode (Canvas/WebGL)
+  width: GAME_WIDTH,
+  height: GAME_HEIGHT,
+  parent: 'gameContainer', // The parent DOM element's id where the game canvas will be appended
+  transparent: false,
+  antialias: true,
+  physics: {
+    default: 'arcade',
+    arcade: {
+      gravity: { y: 0 },
+      debug: DEBUG_MODE
     }
+  }
+};
 
-    setupResolution() {
-        const idealResolution = this.getIdealResolution();
-        this.applyResolutionSettings(idealResolution);
-    }
+// Set Up Game State Manager
+var game = new Phaser.Game(gameConfig);
 
-    getIdealResolution() {
-        return { width: 1920, height: 1080 };
-    }
+// Define BootState
+var BootState = {
+  preload: function() {
+    logDebug("Boot: Preload phase");
+    // Predefine items that need a quick setup
+  },
 
-    applyResolutionSettings(resolution) {
-        console.log(`Setting resolution to ${resolution.width}x${resolution.height}`);
-    }
+  create: function() {
+    logDebug("Boot: Create phase");
+    // Start the loading state after initial setup
+    this.scene.start('Load');
+  }
+};
 
-    configureUIScale() {
-        const uiScale = this.calculateUIScale();
-        this.applyUIScaleSettings(uiScale);
-    }
+// Add BootState to Game
+game.scene.add('Boot', BootState, true);
 
-    calculateUIScale() {
-        return 1.0;
-    }
-
-    applyUIScaleSettings(scale) {
-        console.log(`Applying UI scale of ${scale}`);
-    }
-
-    loadResources() {
-        console.log("Preloading essential resources...");
-        this.transitionToMainGameState();
-    }
-
-    transitionToMainGameState() {
-        console.log("Transitioning to the main game state...");
-    }
+// Logging Setup
+function logDebug(message) {
+  if (DEBUG_MODE) {
+    console.log(message);
+  }
 }
 
-let bootInstance = new Boot();
+// Integration Notes with Other Files
+/*
+ * The boot.js file sets the stage for the `Load` state, where actual resource loading happens.
+ * This setup establishes crucial elements for asset management and paves the way for subsequent states in the game lifecycle.
+ */
 ```

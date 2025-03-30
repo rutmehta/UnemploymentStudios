@@ -1,90 +1,135 @@
 ```javascript
-const audioFilePath = ['assets/sound/', 'sound/dynamic/'];
-let audioContext;
-const audioFiles = {
-    ambient: 'ambient.mp3',
-    exploration: 'exploration.mp3',
-    bossBattle: 'boss_battle.mp3'
+// music.js
+
+/**
+ * This file is responsible for managing dynamic soundtrack adjustments to match gameplay intensity.
+ * Enhances player engagement by adapting music types and volumes in real-time.
+ * 
+ * Dependencies:
+ * - background_music.ogg: Default background soundtrack for calm gameplay.
+ * - battle_tracks.ogg: Intense soundtrack for high-intensity gameplay situations.
+ * - emotional_tone.js: Analyzes gameplay scenes to assess emotional tone and intensity.
+ */
+
+// Imports/Dependencies
+import backgroundMusic from 'audio/background_music.ogg';
+import battleTracks from 'audio/battle_tracks.ogg';
+import { analyzeEmotionalTone } from './emotional_tone.js';
+
+// Constants and Variables
+const GAMEPLAY_STATES = {
+    CALM: 'calm',
+    INTENSE: 'intense'
 };
+
 let currentTrack = null;
-let gainNode;
-
-const initAudioContext = () => {
-    audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    gainNode = audioContext.createGain();
-    gainNode.connect(audioContext.destination);
+let currentState = GAMEPLAY_STATES.CALM;
+let volumeLevels = {
+    normal: 0.5,
+    intense: 0.8
 };
+let intensityThreshold = 0.7;
 
-const loadAudioFile = async (path) => {
-    const response = await fetch(path);
-    const arrayBuffer = await response.arrayBuffer();
-    return audioContext.decodeAudioData(arrayBuffer);
-};
+// Initialization Function
+function initializeMusic() {
+    loadAudioTracks();
+    currentTrack = backgroundMusic;
+    currentTrack.volume = volumeLevels.normal;
+    currentTrack.play();
+}
 
-const audioBuffers = {};
+// Load audio tracks and prepare them for dynamic adjustments
+function loadAudioTracks() {
+    backgroundMusic.load();
+    battleTracks.load();
+}
 
-const preloadAudio = async () => {
-    for (let key in audioFiles) {
-        for (let directory of audioFilePath) {
-            try {
-                audioBuffers[key] = await loadAudioFile(directory + audioFiles[key]);
-                break;
-            } catch (error) {
-                console.error(`Failed to load audio from ${directory}${audioFiles[key]}, trying next directory.`);
-            }
+// Dynamic Music Adjustment
+function adjustMusicBasedOnIntensity(intensity) {
+    if (intensity >= intensityThreshold && currentState !== GAMEPLAY_STATES.INTENSE) {
+        transitionTo(battleTracks, volumeLevels.intense, GAMEPLAY_STATES.INTENSE);
+    } else if (intensity < intensityThreshold && currentState !== GAMEPLAY_STATES.CALM) {
+        transitionTo(backgroundMusic, volumeLevels.normal, GAMEPLAY_STATES.CALM);
+    }
+}
+
+// Transition between tracks based on game state
+function transitionTo(newTrack, newVolume, newState) {
+    crossfadeTracks(currentTrack, newTrack);
+    currentTrack = newTrack;
+    currentState = newState;
+    currentTrack.volume = newVolume;
+    currentTrack.play();
+}
+
+// Event Listeners
+window.addEventListener('gameStateChanged', (event) => {
+    const intensity = analyzeEmotionalTone(event.detail);
+    adjustMusicBasedOnIntensity(intensity);
+});
+
+// Volume and Crossfading Functions
+function crossfadeTracks(trackOut, trackIn) {
+    const fadeDuration = 1000;
+    let step = 0.1;
+    let interval = fadeDuration / (1 / step);
+
+    trackOut.volume = 1;
+    trackIn.volume = 0;
+    trackIn.play();
+
+    let fadeOut = setInterval(() => {
+        if (trackOut.volume > 0) {
+            trackOut.volume -= step;
+        } else {
+            clearInterval(fadeOut);
+            trackOut.pause();
         }
-    }
-};
+    }, interval);
 
-const identifySegment = (gameState) => {
-    switch (gameState) {
-        case 'ambient':
-            return 'ambient';
-        case 'exploration':
-            return 'exploration';
-        case 'boss_battle':
-            return 'bossBattle';
-        default:
-            return 'ambient';
-    }
-};
+    let fadeIn = setInterval(() => {
+        if (trackIn.volume < 1) {
+            trackIn.volume += step;
+        } else {
+            clearInterval(fadeIn);
+        }
+    }, interval);
+}
 
-const playAudio = (segment) => {
+// Playback Control
+function playTrack() {
+    if (currentTrack && currentTrack.paused) currentTrack.play();
+}
+
+function pauseTrack() {
+    if (currentTrack && !currentTrack.paused) currentTrack.pause();
+}
+
+function stopTrack() {
     if (currentTrack) {
-        currentTrack.stop();
+        currentTrack.pause();
+        currentTrack.currentTime = 0;
     }
-    
-    const track = audioContext.createBufferSource();
-    track.buffer = audioBuffers[segment];
-    track.connect(gainNode);
-    track.start();
-    currentTrack = track;
-};
+}
 
-const pauseAudio = () => {
-    if (currentTrack) {
-        currentTrack.stop();
-    }
-};
+function skipTrack() {
+    stopTrack();
+    initializeMusic();
+}
 
-const adjustIntensity = (intensityLevel) => {
-    gainNode.gain.setValueAtTime(intensityLevel, audioContext.currentTime);
-};
+// Integration with Game Loop
+function integrateWithGameLoop() {
+    setInterval(() => {
+        const currentIntensity = analyzeEmotionalTone();
+        adjustMusicBasedOnIntensity(currentIntensity);
+    }, 1000);
+}
 
-const gameEventHandler = (event) => {
-    const segment = identifySegment(event.state);
-    playAudio(segment);
+// Error Handling
+function handleAudioError() {
+    console.error('Audio loading error. Please check audio files and paths.');
+}
 
-    const intensityLevel = event.state === 'boss_battle' ? 1.0 : 0.5;
-    adjustIntensity(intensityLevel);
-};
-
-const cleanUpAudioResources = () => {
-    if (audioContext) {
-        audioContext.close();
-    }
-};
-
-initAudioContext();
-preloadAudio().catch(error => console.error("Error preloading audio files: ", error));
+backgroundMusic.onerror = handleAudioError;
+battleTracks.onerror = handleAudioError;
 ```

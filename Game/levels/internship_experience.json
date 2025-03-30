@@ -1,0 +1,65 @@
+```json
+{
+  "overview": "The 'Internship Experience' offers a simulated real-world coding internship, guiding users through tasks that demonstrate professional growth through project management and team collaboration. This journey aims to equip participants with the technical and professional skills necessary for career advancement.",
+  "levels": [
+    {
+      "levelNumber": 1,
+      "title": "Introduction to the Team",
+      "description": "Familiarize yourself with the team structure and initial project goals. Understand your role and how to collaborate efficiently.",
+      "technicalSkills": ["Version Control Systems", "Basic JavaScript"],
+      "professionalSkills": ["Communication", "Collaboration"],
+      "tasks": [
+        "Set up your development environment using best practices, ensuring optimal performance.",
+        "Connect to the team repository using Git and practice basic Git commands such as branching and merging.",
+        "Attend an onboarding meeting to understand team dynamics and project objectives."
+      ],
+      "dependencies": [],
+      "collaborationElements": {
+        "teamStructure": "You are part of the frontend team working under a project manager.",
+        "rolesAndResponsibilities": {
+          "you": "Junior Developer responsible for building UI components.",
+          "mentor": "Senior Developer assisting with code reviews."
+        }
+      },
+      "projectManagementSimulation": {
+        "milestones": [
+          "Completion of onboarding tasks",
+          "Successful repository setup with an understanding of version control best practices"
+        ],
+        "tools": ["Trello"]
+      },
+      "evaluationCriteria": "Your performance will be evaluated on your ability to set up the development environment, connect to the repository, and communicate effectively with your mentor.",
+      "integrationGuidelines": "Consider setting up shared access to the repository and follow branch naming conventions for future team integration."
+    },
+    {
+      "levelNumber": 2,
+      "title": "Initial Code Contribution",
+      "description": "Start coding by contributing to a specific feature. Follow code standards and participate in a team code review.",
+      "technicalSkills": ["JavaScript Development", "HTML/CSS", "Working with APIs"],
+      "professionalSkills": ["Attention to Detail", "Time Management"],
+      "tasks": [
+        "Develop a new UI component using efficient and clean JavaScript, ensuring performance optimization.",
+        "Ensure the code adheres to team standards, including style guides and naming conventions.",
+        "Submit your code for review and provide constructive feedback on a peer's code, focusing on code efficiency and readability."
+      ],
+      "dependencies": ["Completion of Level 1"],
+      "collaborationElements": {
+        "teamStructure": "The frontend team collaborates on feature implementation with the backend team.",
+        "rolesAndResponsibilities": {
+          "frontendLead": "Designs UI/UX components.",
+          "backendLead": "Ensures API endpoints align with frontend needs."
+        }
+      },
+      "projectManagementSimulation": {
+        "milestones": [
+          "UI component development completion with performance insights shared",
+          "Peer code review session"
+        ],
+        "tools": ["Jira"]
+      },
+      "evaluationCriteria": "Your contribution will be assessed based on code quality, adherence to standards, active participation in the review process, and performance optimization.",
+      "integrationGuidelines": "Ensure modular code for future scalability and easy integration with backend systems. Utilize design patterns where applicable for enhanced maintainability."
+    }
+  ]
+}
+```

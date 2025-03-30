@@ -2,81 +2,141 @@
   "files": [
     {
       "filename": "index.html",
-      "purpose": "Initiates the player's immersive journey into Alex Thompson's world by loading the game into the web browser.",
-      "content_guidelines": "Sets the structure for game scripts and links style and main game scripts.",
-      "dependencies": ["style.css", "main.js"]
+      "purpose": "Serves as the main entry point for the game, embedding essential CSS and JavaScript files to render the game and initiate user interactions.",
+      "content_guidelines": "Initiates game interface aligned with visual and functional requirements.",
+      "dependencies": ["style.css", "boot.js", "game.js", "preloader.js"]
     },
     {
       "filename": "style.css",
-      "purpose": "Governs all global styles for the game while adhering to the pixel art aesthetic.",
-      "content_guidelines": "Ensures the design is consistent with the game's nostalgic, modern feel for visual immersion.",
+      "purpose": "Defines aesthetic properties, supporting nostalgic pixel art style and consistent visual presentation.",
+      "content_guidelines": "Ensure visual consistency across devices, maintaining vibrant, academic-themed environments.",
       "dependencies": null
     },
     {
-      "filename": "main.js",
-      "purpose": "Initializes the game and connects various gaming scripts, acting as the central hub for gameplay.",
-      "content_guidelines": "Facilitates smooth running of Alex's adventures across different levels.",
-      "dependencies": ["game.js", "music.js", "boot.js", "preloader.js"]
+      "filename": "game.js",
+      "purpose": "Handles overall game initialization, orchestrating state management, user inputs, and integrating game modules.",
+      "content_guidelines": "Facilitates smooth gameplay transitions and interaction.",
+      "dependencies": ["boot.js", "preloader.js", "character/alex_codewright.js", "mechanics/platforming.js"]
     },
     {
       "filename": "boot.js",
-      "purpose": "Manages initial setup and configuration before the game begins.",
-      "content_guidelines": "Ensures settings like resolution and UI scale are set for a seamless gaming experience.",
+      "purpose": "Sets up initial game configurations and global variables.",
+      "content_guidelines": "Prepares the game engine for resource loading.",
       "dependencies": null
     },
     {
       "filename": "preloader.js",
-      "purpose": "Handles the preloading of assets to ensure seamless gameplay transitions.",
-      "content_guidelines": "Ensures all necessary assets are loaded before main game features are initiated.",
-      "dependencies": ["main.js", "game.js"]
-    },
-    {
-      "filename": "game.js",
-      "purpose": "Houses the central game loop logic, executing gameplay mechanics and managing state transitions.",
-      "content_guidelines": "Ensures continuous engagement and seamless flow of gameplay.",
-      "dependencies": ["mechanics/navigation/", "mechanics/platforms/", "characters/alex/abilities/"]
+      "purpose": "Manages the loading of essential assets like images and audio files.",
+      "content_guidelines": "Sustain user immersion by preloading resources smoothly.",
+      "dependencies": ["levels/intro_to_programming.json", "levels/advanced_algorithms.json", "levels/internship_experience.json", "levels/final_job_interview.json"]
     },
     {
       "filename": "music.js",
-      "purpose": "Controls audio playback and dynamically adjusts intensity to match gameplay segments.",
-      "content_guidelines": "Defines how background music evolves from ambient tasks to boss battles.",
-      "dependencies": ["assets/sound/", "sound/dynamic/"]
+      "purpose": "Manages dynamic soundtrack, adjusting music to align with gameplay intensity.",
+      "content_guidelines": "Enhance player engagement through auditory stimuli.",
+      "dependencies": ["audio/background_music.ogg", "audio/battle_tracks.ogg", "emotional_tone.js"]
     },
     {
-      "filename": "characters/alex/abilities/",
-      "purpose": "Contains scripts for Alex's abilities, ensuring realistic implementation of skills.",
-      "content_guidelines": "Provides context for abilities like 'code_collection' and 'debug_dash'.",
-      "dependencies": ["mechanics/skill_points/"]
-    },
-    {
-      "filename": "characters/alex/assets/",
-      "purpose": "Holds visual assets of Alex, maintaining consistency with retro theme aesthetics.",
-      "content_guidelines": "Storage for all sprite images and animations used in game scenes.",
+      "filename": "levels/intro_to_programming.json",
+      "purpose": "Defines the 'Intro to Programming' level design, including enemy placements and objectives.",
+      "content_guidelines": "Reflect Alex's early academic challenges.",
       "dependencies": null
     },
     {
-      "filename": "mechanics/navigation/",
-      "purpose": "Contains algorithms for character movement such as running, jumping, and dodging.",
-      "content_guidelines": "Defines core movement mechanics influencing user interaction with levels.",
-      "dependencies": ["game.js"]
-    },
-    {
-      "filename": "enemies/procrastination_monster/",
-      "purpose": "Manages scripts and assets defining these symbolic obstacles.",
-      "content_guidelines": "Ensures a consistent challenge symbolizing Alex's time management issues.",
-      "dependencies": ["game.js"]
-    },
-    {
-      "filename": "assets/pixel_art/",
-      "purpose": "Repository for all pixel art assets including sprites for characters and environments.",
-      "content_guidelines": "Reinforces aesthetic cohesion and nostalgic visual engagement.",
+      "filename": "levels/advanced_algorithms.json",
+      "purpose": "Defines the 'Advanced Algorithms' level design, enhancing difficulty.",
+      "content_guidelines": "Promote algorithmic thinking and puzzle solving.",
       "dependencies": null
     },
     {
-      "filename": "narrative/dialogues/",
-      "purpose": "Stores scripting files for in-game conversations.",
-      "content_guidelines": "Facilitates emotional and narrative progression with key character interactions.",
-      "dependencies": ["narrative/events/"]
+      "filename": "levels/internship_experience.json",
+      "purpose": "Simulates real-world coding tasks for 'Internship Experience'.",
+      "content_guidelines": "Reflect professional growth through project management and team collaboration.",
+      "dependencies": null
+    },
+    {
+      "filename": "levels/final_job_interview.json",
+      "purpose": "Defines the 'Final Job Interview' level with the Robo Recruiter.",
+      "content_guidelines": "Test all skills learned and culminate narrative and character growth.",
+      "dependencies": null
+    },
+    {
+      "filename": "character/alex_codewright.js",
+      "purpose": "Manages Alex Codewright's mechanics and progression.",
+      "content_guidelines": "Facilitate character's academic and professional growth journey.",
+      "dependencies": null
+    },
+    {
+      "filename": "challenges/simple_bugs.js",
+      "purpose": "Handles educational bug puzzles.",
+      "content_guidelines": "Offer structured problem-solving scenarios at various skill levels.",
+      "dependencies": null
+    },
+    {
+      "filename": "challenges/ai_puzzles.js",
+      "purpose": "Manages AI-generated coding challenges.",
+      "content_guidelines": "Encourage learning through diverse programming obstacles.",
+      "dependencies": null
+    },
+    {
+      "filename": "emotional_tone.js",
+      "purpose": "Dynamically adjusts dialogues and soundtrack to enhance emotional experiences.",
+      "content_guidelines": "Reflect character development and narrative arcs.",
+      "dependencies": ["music.js"]
+    },
+    {
+      "filename": "visual_assets/characters/",
+      "purpose": "Stores pixel art sprites for characters.",
+      "content_guidelines": "Ensure thematic clarity and cohesion.",
+      "dependencies": null
+    },
+    {
+      "filename": "visual_assets/environments/",
+      "purpose": "Stores pixel art environments.",
+      "content_guidelines": "Maintain academic and retro-aesthetic consistency.",
+      "dependencies": null
+    },
+    {
+      "filename": "visual_assets/collectables/",
+      "purpose": "Stores collectable item sprites.",
+      "content_guidelines": "Enhance interactivity and world-building.",
+      "dependencies": null
+    },
+    {
+      "filename": "audio/background_music.ogg",
+      "purpose": "Contains the main soundtrack.",
+      "content_guidelines": "Support immersive and adaptive audio design.",
+      "dependencies": null
+    },
+    {
+      "filename": "audio/battle_tracks.ogg",
+      "purpose": "Contains intense battle themes.",
+      "content_guidelines": "Enhance player engagement during pivotal moments.",
+      "dependencies": null
+    },
+    {
+      "filename": "mechanics/platforming.js",
+      "purpose": "Contains scripts for 2D platforming mechanics.",
+      "content_guidelines": "Simulate classic interactions such as jumping and collision.",
+      "dependencies": null
+    },
+    {
+      "filename": "minigames/educational_games.js",
+      "purpose": "Manages educational mini-games.",
+      "content_guidelines": "Impart coding skills while maintaining gameplay engagement.",
+      "dependencies": null
+    },
+    {
+      "filename": "minigames/boss_battles.js",
+      "purpose": "Handles boss encounters.",
+      "content_guidelines": "Align with character and narrative development.",
+      "dependencies": null
+    },
+    {
+      "filename": "difficulty_manager.js",
+      "purpose": "Oversees adaptive difficulty logic.",
+      "content_guidelines": "Adjust challenge levels based on player performance.",
+      "dependencies": null
     }
   ]
 }

@@ -1,0 +1,81 @@
+```json
+{
+  "introduction": {
+    "title": "Final Job Interview",
+    "narrative": "As you step into the gleaming office of Robo Recruiter Inc., you sense that everything has led to this moment. The 'Final Job Interview' awaits, where you'll showcase the culmination of your knowledge, skills, and growth. Are you ready for the ultimate test?"
+  },
+  "objectives": {
+    "skillsTested": [
+      "problemSolving",
+      "communication",
+      "technicalExpertise",
+      "teamwork",
+      "creativity"
+    ],
+    "successCriteria": {
+      "problemSolving": "Innovative solutions provided within time limits.",
+      "communication": "Clear articulation of ideas and strategies.",
+      "technicalExpertise": "Correct application of technology and tools.",
+      "teamwork": "Effective collaboration with the Robo Recruiter AI.",
+      "creativity": "Unique approaches that impress the recruiter."
+    }
+  },
+  "skillTests": [
+    {
+      "scenario": "Debug a critical system error in a simulated environment.",
+      "skill": "problemSolving",
+      "difficulty": "hard",
+      "successCriteria": "Error is resolved efficiently using minimal hints."
+    },
+    {
+      "scenario": "Persuade a virtual panel of recruiters through a simulated video call.",
+      "skill": "communication",
+      "difficulty": "medium",
+      "successCriteria": "Successfully convey key points of resume and experience."
+    },
+    {
+      "scenario": "Develop a quick prototype for a new app feature.",
+      "skill": "technicalExpertise",
+      "difficulty": "hard",
+      "successCriteria": "Prototype meets all requirements within the allotted time."
+    },
+    {
+      "scenario": "Participate in a collaborative project design session.",
+      "skill": "teamwork",
+      "difficulty": "medium",
+      "successCriteria": "Contributions effectively advance the project toward completion."
+    },
+    {
+      "scenario": "Design a novel marketing strategy within budget constraints.",
+      "skill": "creativity",
+      "difficulty": "hard",
+      "successCriteria": "Strategy is both innovative and practical, with clear ROI potential."
+    }
+  ],
+  "narrativeGrowth": {
+    "dialogue": [
+      {
+        "character": "Player",
+        "text": "I've come so far and learned so much—this is my moment to shine!"
+      },
+      {
+        "character": "Robo Recruiter",
+        "text": "Impressive evolution, candidate. Let's see if you've truly mastered all necessary skills."
+      }
+    ],
+    "events": [
+      "Player recalls past challenges and how they've shaped their journey.",
+      "Successful completion of challenges results in a celebratory moment."
+    ]
+  },
+  "conclusion": {
+    "narrative": "The interview concludes. Looking around the room, you nod with satisfaction, aware of the impressive journey undertaken. The Robo Recruiter acknowledges your skills with a robotic stamp of approval.",
+    "feedback": "You've demonstrated remarkable growth and potential. Here are some areas to consider for future improvement...",
+    "futurePaths": "An offer letter arrives in your inbox, and you contemplate the exciting career possibilities ahead."
+  },
+  "integration": {
+    "globalSettingsRef": "gameSettings",
+    "nextLevelTriggerId": "levelAdvance_finalInterview"
+  }
+}
+```

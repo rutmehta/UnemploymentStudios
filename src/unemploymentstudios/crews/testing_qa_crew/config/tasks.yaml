@@ -1,0 +1,106 @@
+analyze_game_code:
+  description: >
+    You (as the QA Lead) need to analyze all generated game code files to understand 
+    the game structure, systems, and potential areas for testing. Consider:
+    
+    - HTML structure and organization
+    - JavaScript code quality and organization
+    - CSS styling and responsiveness
+    - Asset loading and management
+    - Game initialization and state management
+    
+    Create a comprehensive analysis of the codebase that will guide further testing.
+  expected_output: >
+    A detailed analysis of the game codebase, identifying key components, 
+    architecture patterns, and potential areas of concern for testing.
+    The analysis should also include a testing strategy and approach.
+  agent: qa_lead
+
+test_gameplay_mechanics:
+  description: >
+    You (as the Game Tester) need to systematically test all gameplay mechanics
+    to ensure they function as intended. Test:
+    
+    - Character movement and controls
+    - Collision detection
+    - Game object interactions
+    - Level progression
+    - Enemy behavior
+    - Win/loss conditions
+    
+    Document all findings, including successful tests and any issues discovered.
+  expected_output: >
+    A comprehensive gameplay testing report that details how each game mechanic
+    functions, any inconsistencies or bugs found, and recommendations for improvements.
+  agent: game_tester
+
+evaluate_performance:
+  description: >
+    You (as the Performance Analyst) need to evaluate the game's code for performance
+    optimization, including:
+    
+    - JavaScript execution efficiency
+    - Asset loading and management
+    - Animation performance
+    - Memory usage and potential leaks
+    - Rendering optimization
+    
+    Identify any performance bottlenecks and suggest improvements.
+  expected_output: >
+    A detailed performance analysis identifying any inefficient code patterns,
+    potential bottlenecks, and specific recommendations for performance optimization.
+  agent: performance_analyst
+
+assess_user_experience:
+  description: >
+    You (as the UX Evaluator) need to assess the overall user experience of the game,
+    focusing on:
+    
+    - Intuitiveness of controls
+    - Clarity of objectives
+    - Feedback mechanisms
+    - Learning curve and difficulty progression
+    - Visual clarity and readability
+    - Overall enjoyment and engagement
+    
+    Provide a holistic evaluation of the player experience.
+  expected_output: >
+    A comprehensive UX evaluation that identifies strengths and weaknesses in the
+    player experience, including specific suggestions for improvements to enhance
+    player engagement and enjoyment.
+  agent: ux_evaluator
+
+identify_bugs:
+  description: >
+    You (as the Game Tester) need to systematically identify any bugs, glitches,
+    or inconsistencies in the game, including:
+    
+    - Visual glitches
+    - Logical errors in game rules
+    - Inconsistent behavior
+    - Edge case scenarios
+    - Browser compatibility issues
+    
+    Document all bugs found with clear steps to reproduce.
+  expected_output: >
+    A bug report that catalogs all identified issues, including severity ratings,
+    steps to reproduce, expected vs. actual behavior, and potential causes.
+  agent: game_tester
+
+compile_qa_report:
+  description: >
+    You (as the QA Lead) need to compile all testing findings into a comprehensive
+    QA report that:
+    
+    - Summarizes all testing activities
+    - Prioritizes identified issues
+    - Provides specific recommendations for fixes
+    - Highlights areas for future improvement
+    - Gives an overall assessment of game quality
+    
+    This report will guide final adjustments to the game before release.
+  expected_output: >
+    A comprehensive QA report that integrates findings from all testing activities,
+    prioritizes issues, and provides clear recommendations for improvements to
+    ensure a high-quality game experience.
+  agent: qa_lead
