@@ -2,13 +2,13 @@ analyze_asset_requirements:
   description: >
     You (as the Asset Manager) need to analyze the game concept document and file structure
     to identify all asset requirements for the game. Consider:
-    
+
     - Character designs based on: {main_character}, {supporting_characters}
     - Environment elements from: {world_building}
     - Level-specific assets for: {levels}
     - UI elements that match: {visual_style}
     - Audio elements that align with: {audio_style}
-    
+
     Create a comprehensive list of all assets needed, organized by type and priority.
   expected_output: >
     A detailed asset requirements document that lists all graphical, audio, and UI assets 
@@ -20,12 +20,12 @@ design_character_assets:
   description: >
     You (as the Graphic Designer) are responsible for creating detailed descriptions
     of all character assets needed for the game, including:
-    
+
     - Main character sprites (idle, walking, jumping, attacking, etc.)
     - Supporting character designs
     - Enemy character designs
     - NPC designs
-    
+
     For each character, provide a detailed visual description that another artist could use
     to create the actual graphics. Include dimensions, color palettes, animation frames needed,
     and special effects.
@@ -39,12 +39,12 @@ design_environment_assets:
   description: >
     You (as the Graphic Designer) need to create detailed descriptions of all environmental 
     assets needed for the game, including:
-    
+
     - Background elements for each level
     - Terrain features (platforms, obstacles, etc.)
     - Interactive elements (doors, switches, collectibles)
     - Decorative elements that enhance the atmosphere
-    
+
     For each environmental asset, provide a detailed visual description, dimensions,
     and how it fits into the game world.
   expected_output: >
@@ -57,14 +57,14 @@ design_ui_elements:
   description: >
     You (as the UI Designer) need to create detailed descriptions of all UI elements 
     needed for the game, including:
-    
+
     - Main menu screens
     - HUD elements (health bars, score displays, etc.)
     - Pause menu
     - Inventory screens (if applicable)
     - Dialog boxes
     - Tutorial elements
-    
+
     For each UI element, provide a detailed visual description, positioning information,
     and how it integrates with gameplay.
   expected_output: >
@@ -77,13 +77,13 @@ create_sound_effects:
   description: >
     You (as the Sound Designer) need to create detailed descriptions of all sound effects
     needed for the game, including:
-    
+
     - Character action sounds (jumping, attacking, etc.)
     - Environmental sounds
     - UI feedback sounds
     - Enemy sounds
     - Special ability sounds
-    
+
     For each sound effect, provide a detailed description of its characteristics,
     when it should play, and how it enhances gameplay.
   expected_output: >
@@ -96,13 +96,13 @@ create_background_music:
   description: >
     You (as the Sound Designer) need to create detailed descriptions of all background
     music tracks needed for the game, including:
-    
+
     - Main theme
     - Level-specific tracks
     - Boss battle music
     - Menu music
     - Victory/defeat jingles
-    
+
     For each music track, describe its mood, instrumentation, tempo, and how it relates
     to the game's emotional arc.
   expected_output: >
@@ -115,16 +115,56 @@ finalize_assets:
   description: >
     You (as the Asset Manager) need to compile all the asset descriptions and create
     a final asset implementation plan. This should include:
-    
+
     - A comprehensive asset list with all graphics, audio, and UI elements
     - File naming conventions
     - Directory structure for assets
     - Implementation guidelines for developers
     - Prioritization of assets for development
-    
+
     Ensure all assets work together cohesively and align with the game's visual and audio style.
   expected_output: >
     A complete asset implementation plan that includes all asset specifications,
     file structure, naming conventions, and technical requirements. This should be
     ready for developers to use in creating the actual game assets.
   agent: asset_manager
+generate_visual_assets:
+  description: >
+    You (as the Image Generator) will use the **dalle** tool to produce every visual
+    asset listed in the requirements.  For each item supply:
+      • final image file path (PNG/WebP, transparent bg where needed)
+      • the exact DALL·E prompt you used
+      • native resolution & any resize variants
+      • suggested <img> / CSS usage snippet
+  expected_output: >
+    A JSON‑like manifest mapping asset‑name → {file, prompt, width, height, notes}
+    saved to `assets/manifest_images.json`.
+  agent: image_generator
+
+source_audio_assets:
+  description: >
+    You (as the Audio Sourcer) will fetch/trim normalised WAV/OGG files that satisfy
+    each audio requirement.  Steps:
+      1. Query Freesound API with semantic keywords.
+      2. Verify licence (CC0 or CC‑BY with attribution string).
+      3. Loudness‑normalise to ‑14 LUFS and export.
+      4. Update `assets/manifest_audio.json` with
+         {file, original_url, licence, attribution}.
+  expected_output: >
+    A ready‑to‑import collection of audio files in `assets/audio/`
+    plus the JSON manifest.
+  agent: audio_sourcer
+
+integrate_assets:
+  description: >
+    You (as the Asset Integrator) automatically:
+      • copy/optimise the new assets into `/public/assets/**`
+      • add/replace import links in HTML, CSS, JS
+      • update the `gameAssets.ts` registry
+      • commit the changes on a new Git branch `feature/assets‑{date}`
+  expected_output: >
+    PR‑ready branch with:
+      • committed assets
+      • updated code
+      • CI passing
+  agent: asset_integrator

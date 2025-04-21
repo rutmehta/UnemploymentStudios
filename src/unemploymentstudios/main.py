@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+import os
+import dotenv
+dotenv.load_dotenv(override=True)
 from typing import Dict
 from random import randint
 from pydantic import BaseModel, Field
@@ -15,14 +18,12 @@ from unemploymentstudios.crews.testing_qa_crew.testing_qa_crew import TestingQAC
 from unemploymentstudios.types import GameConcept
 
 # Additional Imports
-import os
 import asyncio
 import time
 import json
-import dotenv
-
-# Load environment variables from .env file
-dotenv.load_dotenv()
+import shutil
+import pathlib
+from pathlib import Path
 
 # Load concept from file or create default if it doesn't exist
 concept_path = os.path.join(os.path.dirname(__file__), "knowledge", "concept.json")
@@ -48,20 +49,24 @@ def is_directory(path: str) -> bool:
     return path.endswith("/")
 
 class GameState(BaseModel):
+    # Concept fields ---------------------------------------------------------
     Storyline: str = concept["Storyline"]
     Game_Mechanics: str = concept["Game mechanics"]
     Entities: str = concept["Characters and Interactive entities"]
     Levels: str = concept["Levels and difficulty"]
     visualAudioStyle: str = concept["Visual and audio style"]
-    
+
+    # Phase outputs ----------------------------------------------------------
     conceptExpansionOutput: str = ""
     fileStructurePlanningOutput: str = ""
     assetGenerationOutput: str = ""
     testingQAOutput: str = ""
 
-    # Add this line so we have a place to store generated code
+    # Generated artefacts ----------------------------------------------------
     generatedCodeFiles: Dict[str, str] = Field(default_factory=dict)
     generatedAssetSpecs: Dict[str, str] = Field(default_factory=dict)
+    generatedImages: Dict[str, str] = Field(default_factory=dict)
+    generatedSounds: Dict[str, str] = Field(default_factory=dict)
     qaReports: Dict[str, str] = Field(default_factory=dict)
 
 class GameFlow(Flow[GameState]):
@@ -302,189 +307,125 @@ class GameFlow(Flow[GameState]):
             print(f"Error generating code for {filename}: {str(e)}")
             return None
         
-    def _write_file_to_disk(self, filename, content):
+    def _write_file_to_disk(self, filename: str, content: str):
         """
-        Write a generated file to disk
+        Write a generated file to disk, skipping folder‑only entries.
         """
-        # Define the game directory
         output_dir = "./Game"
-        
-        # Handle nested directories within the filename (e.g., assets/images/sprite.png)
+
+        # ── 1️⃣ Ignore or create directory‑only specs ───────────────────────────────
+        if filename.endswith("/") or os.path.basename(filename) == "":
+            dir_path = os.path.join(output_dir, filename)
+            os.makedirs(dir_path, exist_ok=True)
+            print(f"Created directory (no file to write): {dir_path}")
+            return
+
+        # ── 2️⃣ Ensure parent folders exist (unchanged) ────────────────────────────
         if "/" in filename:
             sub_path = os.path.dirname(filename)
             full_dir_path = os.path.join(output_dir, sub_path)
             os.makedirs(full_dir_path, exist_ok=True)
-        
-        # Full path including output directory
+
+        # ── 3️⃣ Write the file (unchanged) ─────────────────────────────────────────
         file_path = os.path.join(output_dir, filename)
-        
-        # Write the file
-        with open(file_path, "w") as f:
+        with open(file_path, "w", encoding="utf-8") as f:
             f.write(content)
-            
+
         print(f"Wrote file: {file_path}")
+
 
     @listen(write_code_files)
     def generate_assets(self):
         """
-        Generate game assets based on game concept and file structure.
+        Generate game assets *and* store the actual image / sound files
+        in a sane directory structure inside ./Game/assets/.
         """
         print("=== Starting Asset Generation Phase ===")
-        
+
+        # 1. Prepare crew inputs exactly as before
         try:
-            # Parse the concept expansion output into a game concept
             expanded_concept = GameConcept(**json.loads(self.state.conceptExpansionOutput))
-            
-            # Create inputs for the asset generation crew
             asset_inputs = {
                 "main_character": expanded_concept.main_character.dict(),
-                "supporting_characters": [char.dict() for char in expanded_concept.supporting_characters],
+                "supporting_characters": [c.dict() for c in expanded_concept.supporting_characters],
                 "world_building": expanded_concept.world_building,
-                "levels": [level.dict() for level in expanded_concept.levels],
+                "levels": [l.dict() for l in expanded_concept.levels],
                 "visual_style": expanded_concept.visual_style,
                 "audio_style": expanded_concept.audio_style,
-                "title": expanded_concept.title
+                "title": expanded_concept.title,
             }
-            
-            # Use AssetGenerationCrew to generate asset specifications
+
+            # 2. Kick off the AssetGenerationCrew
             asset_result = (
                 AssetGenerationCrew()
                 .crew()
                 .kickoff(inputs=asset_inputs)
             )
-            
-            # Store the asset generation output
             self.state.assetGenerationOutput = asset_result.raw
-            
-            # Save asset specs to file
-            with open("./Game/asset_specifications.txt", "w") as f:
-                f.write(self.state.assetGenerationOutput)
-                
-            print("Asset specifications generated successfully")
-            
-            # Parse asset specifications and create placeholder files for key assets
-            # This is a placeholder - in a real implementation, this would generate actual assets
-            self._create_placeholder_assets()
-            
-        except Exception as e:
-            print(f"Error in asset generation: {str(e)}")
-            
-            # Create a minimal asset requirements file as fallback
-            asset_requirements = """
-            # Asset Requirements
-            
-            Based on the game concept and file structure, the following assets are needed:
-            
-            ## Graphics
-            - Character sprites
-            - Background images
-            - UI elements
-            - Animation frames
-            
-            ## Audio
-            - Background music
-            - Sound effects
-            - Voice acting (if applicable)
-            
-            ## Other
-            - Fonts
-            - Special effects
-            """
-            
-            # Write asset requirements to file
-            with open("./Game/asset_requirements.md", "w") as f:
-                f.write(asset_requirements)
-                
-            print("Created fallback asset_requirements.md")
-            
-        print("=== Asset Generation Phase Complete ===")
-        
-    def _create_placeholder_assets(self):
-        """Create placeholder files for key assets"""
-        
-        # Create asset directories
-        asset_dirs = [
-            "./Game/assets",
-            "./Game/assets/images",
-            "./Game/assets/audio",
-            "./Game/assets/fonts"
-        ]
-        
-        for dir_path in asset_dirs:
-            os.makedirs(dir_path, exist_ok=True)
-            
-        # Create placeholder HTML/CSS for assets reference
-        placeholder_html = """
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Game Assets Reference</title>
-            <style>
-                body { font-family: Arial, sans-serif; margin: 20px; }
-                h1 { color: #333; }
-                .asset-section { margin-bottom: 30px; }
-                .asset-item { margin: 10px 0; padding: 10px; border: 1px solid #ddd; }
-            </style>
-        </head>
-        <body>
-            <h1>Game Assets Reference</h1>
-            <p>This file serves as a reference for all assets needed in the game.</p>
-            
-            <div class="asset-section">
-                <h2>Character Assets</h2>
-                <div class="asset-item">
-                    <h3>Main Character</h3>
-                    <p>Placeholder for main character sprite sheet</p>
-                </div>
-                <div class="asset-item">
-                    <h3>Supporting Characters</h3>
-                    <p>Placeholder for supporting character assets</p>
-                </div>
-            </div>
-            
-            <div class="asset-section">
-                <h2>Environment Assets</h2>
-                <div class="asset-item">
-                    <h3>Backgrounds</h3>
-                    <p>Placeholder for background images</p>
-                </div>
-                <div class="asset-item">
-                    <h3>Platforms & Objects</h3>
-                    <p>Placeholder for interactive elements</p>
-                </div>
-            </div>
-            
-            <div class="asset-section">
-                <h2>Audio Assets</h2>
-                <div class="asset-item">
-                    <h3>Background Music</h3>
-                    <p>Placeholder for music tracks</p>
-                </div>
-                <div class="asset-item">
-                    <h3>Sound Effects</h3>
-                    <p>Placeholder for sound effects</p>
-                </div>
-            </div>
-        </body>
-        </html>
-        """
-        
-        # Write asset reference HTML
-        with open("./Game/assets/index.html", "w") as f:
-            f.write(placeholder_html)
-            
-        # Create minimal placeholder files for essential assets
-        with open("./Game/assets/images/placeholder.txt", "w") as f:
-            f.write("Placeholder for image assets")
-            
-        with open("./Game/assets/audio/placeholder.txt", "w") as f:
-            f.write("Placeholder for audio assets")
-            
-        with open("./Game/assets/fonts/placeholder.txt", "w") as f:
-            f.write("Placeholder for font assets")
 
+            # 3. Copy everything into ./Game/assets/
+            self._organise_generated_assets()
+
+            # 4. Save raw log for transparency
+            with open("./Game/asset_generation_log.txt", "w") as f:
+                f.write(self.state.assetGenerationOutput)
+
+            print("Asset generation & copying complete.")
+
+        except Exception as e:
+            print(f"[Asset Generation] Error: {e}")
+        print("=== Asset Generation Phase Complete ===")
+
+    # -----------------------------------------------------------------------
+    #                          NEW helper methods
+    # -----------------------------------------------------------------------
+    def _organise_generated_assets(self):
+        """
+        Copy manifests + actual files produced by AssetGenerationCrew into
+        the canonical ./Game/assets folder.
+        """
+        game_assets_root = pathlib.Path("./Game/assets")
+        images_dir = game_assets_root / "images"
+        audio_dir = game_assets_root / "audio"
+        game_assets_root.mkdir(parents=True, exist_ok=True)
+        images_dir.mkdir(exist_ok=True)
+        audio_dir.mkdir(exist_ok=True)
+
+        # default locations produced by our crew
+        crew_assets_root = pathlib.Path("./assets")
+        public_root = pathlib.Path("./public/assets")  # in case Integrator used this
+
+        # 1️⃣ Copy manifest files if they exist
+        for src in [
+            crew_assets_root / "manifest_images.json",
+            crew_assets_root / "manifest_audio.json",
+            public_root / "manifest_images.json",
+            public_root / "manifest_audio.json",
+        ]:
+            if src.exists():
+                shutil.copy2(src, game_assets_root / src.name)
+
+        # 2️⃣ Walk through likely asset locations and copy files
+        for candidate_root in [crew_assets_root, public_root]:
+            if not candidate_root.exists():
+                continue
+            for path in candidate_root.rglob("*"):
+                if path.is_file():
+                    # Decide destination sub‑dir (images vs audio vs other)
+                    lower = path.suffix.lower()
+                    if lower in {".png", ".jpg", ".jpeg", ".webp", ".gif"}:
+                        dest = images_dir / path.name
+                        shutil.copy2(path, dest)
+                        self.state.generatedImages[path.name] = str(dest)
+                    elif lower in {".wav", ".mp3", ".ogg"}:
+                        dest = audio_dir / path.name
+                        shutil.copy2(path, dest)
+                        self.state.generatedSounds[path.name] = str(dest)
+                    # else: ignore (could add fonts or fx later)
+
+        # 3️⃣ Simple console summary
+        print(f"  Copied {len(self.state.generatedImages)} images "
+              f"and {len(self.state.generatedSounds)} audio files into Game/assets.")
     @listen(generate_assets)
     def test_game(self):
         """

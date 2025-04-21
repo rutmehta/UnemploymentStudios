@@ -16,7 +16,7 @@ class ConceptExpansionCrew:
     tasks_config = "config/tasks.yaml"
 
     # Basic configuration
-    llm = LLM(model="gpt-4o")
+    llm = LLM(model="openai/gpt-4o")
 
     # Advanced configuration with detailed parameters
     '''
