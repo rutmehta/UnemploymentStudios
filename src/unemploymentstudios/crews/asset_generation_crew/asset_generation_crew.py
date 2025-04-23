@@ -12,6 +12,8 @@ import json
 import pathlib
 import requests
 from typing import Any, List, Optional, Type
+import dotenv
+import freesound
 
 from bs4 import BeautifulSoup    
 # ---------------------------------------------------------------------------
@@ -22,6 +24,7 @@ from typing import Any
 
 # --------------------------- The actual Tool class ---------------------------
 class GenerateAndDownloadImageSchema(BaseModel):
+    print("GenerateAndDownloadImageSchema RUNNING")
     prompt          : str = Field(..., description="Prompt for DALL·E")
     file_name       : str = Field(..., description="Where to save the image (PNG)")
     size            : str = Field("1024x1024", description="Image resolution")
@@ -34,6 +37,7 @@ class GenerateAndDownloadImageTool(BaseTool):
     A single tool that generates an image via OpenAI’s DALL·E API
     and downloads it locally (**url** or **b64_json** variant).
     """
+    print("GenerateAndDownloadImageTool RUNNING")
     name        : str = "generate_and_download_image"
     description : str = (
         "Generate an image from a prompt via DALL·E, "
@@ -51,12 +55,12 @@ class GenerateAndDownloadImageTool(BaseTool):
         n               = kwargs.get("n", 1)
 
         # -- Make sure OPENAI_API_KEY is set
-        openai_key = os.getenv("OPENAI_API_KEY")
-        if not openai_key:
+        dotenv.load_dotenv(override=True)
+        if not os.getenv("OPENAI_API_KEY"):
             return "OPENAI_API_KEY is not set in the environment."
 
         # -- Configure client
-        client = OpenAI(api_key=openai_key)
+        client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
         # -- Call DALL·E
         response = client.images.generate(
@@ -128,10 +132,9 @@ class SearchAndSaveSoundToolArgs(BaseModel):
 
 class SearchAndSaveSoundTool(BaseTool):
     """
-    Searches Freesound for the query, downloads the first preview,
-    and returns metadata as a JSON string.
+    Searches Freesound for the query, scrapes the first result using BeautifulSoup,
+    and downloads the preview audio file.
     """
-
     name: str = "search_and_save_sound"
     description: str = (
         "Search Freesound for an audio clip and save the first preview to disk. "
@@ -139,17 +142,9 @@ class SearchAndSaveSoundTool(BaseTool):
     )
     args_schema = SearchAndSaveSoundToolArgs
 
-    def __init__(self, freesound_client, **kwargs):
-        """
-        Parameters
-        ----------
-        freesound_client : freesound.FreesoundClient
-            An authenticated Freesound client instance.
-        """
+    def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.client = freesound_client
 
-    # ---------- sync run ----------
     def _run(
         self,
         *,
@@ -158,70 +153,38 @@ class SearchAndSaveSoundTool(BaseTool):
         max_results: int = 5,
         **_
     ) -> Any:
-        # ------------------------------------------------------------------ #
-        # 1. Fetch search results                                             #
-        # ------------------------------------------------------------------ #
-        pager = self.client.text_search(
-            query=query,
-            sort="score",
-            fields="id,name,username,previews",
-            page_size=max_results,
-        )
-        results = list(pager[: max_results])
+        import os
+        import json
+        from freesound import FreesoundClient
+        import requests
 
-        if not results:
-            return json.dumps({"error": "No results found."})
+        api_key = os.getenv("FREESOUND_API_KEY")
+        if not api_key:
+            return json.dumps({"error": "FREESOUND_API_KEY not set in environment."})
+        client = FreesoundClient()
+        client.set_token(api_key, "token")
 
-        chosen_sound = results[0]
-        sound_id = chosen_sound.id
-        sound_user = chosen_sound.username
-        url = f"https://freesound.org/people/{sound_user}/sounds/{sound_id}/"
-
-        # ------------------------------------------------------------------ #
-        # 2. Scrape a short description                                       #
-        # ------------------------------------------------------------------ #
         try:
-            page = requests.get(url, timeout=10)
-            page.raise_for_status()
-            soup = BeautifulSoup(page.content, "html.parser")
-            desc_section = soup.find(id="soundDescriptionSection")
-            raw_desc = re.sub(r"<.*?>", "", str(desc_section)) if desc_section else ""
-        except Exception:
-            raw_desc = "N/A"
-
-        # ------------------------------------------------------------------ #
-        # 3. Save the preview locally                                         #
-        # ------------------------------------------------------------------ #
-        try:
-            directory = os.path.dirname(output_path)
-            filename = os.path.basename(output_path)
-
-            if directory and not os.path.exists(directory):
-                os.makedirs(directory, exist_ok=True)
-
-            chosen_sound.retrieve_preview(directory, filename)
+            results = client.text_search(query=query, fields="id,name,previews,url", page_size=max_results)
+            if not results or len(results) == 0:
+                return json.dumps({"error": "No results found."})
+            sound = results[0]
+            preview_url = sound.previews.preview_hq_mp3 or sound.previews.preview_lq_mp3
+            if not preview_url:
+                return json.dumps({"error": "No preview audio found for this sound."})
+            audio_data = requests.get(preview_url, timeout=15)
+            audio_data.raise_for_status()
+            os.makedirs(os.path.dirname(output_path), exist_ok=True)
+            with open(output_path, "wb") as f:
+                f.write(audio_data.content)
+            return json.dumps({
+                "file": output_path,
+                "original_url": sound.url,
+                "preview_url": preview_url,
+                "message": f"Audio saved as {output_path}"
+            }, indent=2)
         except Exception as e:
-            return json.dumps(
-                {
-                    "error": f"Failed to save sound (ID={sound_id}): {e}"
-                }
-            )
-
-        # ------------------------------------------------------------------ #
-        # 4. Build & return response                                          #
-        # ------------------------------------------------------------------ #
-        response_data = {
-            "chosen_sound_id": sound_id,
-            "name": chosen_sound.name,
-            "description": raw_desc.strip(),
-            "saved_path": os.path.abspath(output_path),
-        }
-        return json.dumps(response_data, indent=2)
-
-    # ---------- async run (CrewAI expects this wrapper) ----------
-    async def _arun(self, **kwargs) -> Any:  # noqa: D401
-        return self._run(**kwargs)
-
+            return json.dumps({"error": f"Failed to fetch or save audio: {e}"})
 @CrewBase
 class AssetGenerationCrew:
     """Asset Generation Crew for game development"""
@@ -265,13 +228,13 @@ class AssetGenerationCrew:
     def image_generator(self) -> Agent:
         return Agent(
             config=self.agents_config["image_generator"],
-            tools=[GenerateAndDownloadImageTool()],   # 🟢 now saves files
+            tools=[GenerateAndDownloadImageTool()],   # now saves files
             llm=self.llm,
         )
     @agent
     def audio_sourcer(self) -> Agent:
         """Fetches & normalises audio via the custom Freesound tool."""
-        fs_tool = SearchAndSaveSoundTool()      # ← uses the code you supplied
+        fs_tool = SearchAndSaveSoundTool()      # uses the code you supplied
         return Agent(
             config=self.agents_config["audio_sourcer"],
             tools=[fs_tool],

@@ -313,26 +313,91 @@ class GameFlow(Flow[GameState]):
         """
         output_dir = "./Game"
 
+        # Skip any paths that try to write outside the Game directory
+        if filename.startswith('/'):
+            print(f"Warning: Skipping file with absolute path: {filename}")
+            # Store a sanitized version in the state
+            safe_filename = filename.lstrip('/')
+            self.state.generatedCodeFiles[safe_filename] = content
+            return
+
         # ── 1️⃣ Ignore or create directory‑only specs ───────────────────────────────
         if filename.endswith("/") or os.path.basename(filename) == "":
-            dir_path = os.path.join(output_dir, filename)
-            os.makedirs(dir_path, exist_ok=True)
-            print(f"Created directory (no file to write): {dir_path}")
+            try:
+                dir_path = os.path.join(output_dir, filename)
+                os.makedirs(dir_path, exist_ok=True)
+                print(f"Created directory (no file to write): {dir_path}")
+            except OSError as e:
+                print(f"Warning: Could not create directory {dir_path}: {e}")
             return
 
         # ── 2️⃣ Ensure parent folders exist (unchanged) ────────────────────────────
         if "/" in filename:
             sub_path = os.path.dirname(filename)
             full_dir_path = os.path.join(output_dir, sub_path)
-            os.makedirs(full_dir_path, exist_ok=True)
+            try:
+                os.makedirs(full_dir_path, exist_ok=True)
+            except OSError as e:
+                print(f"Warning: Could not create directory {full_dir_path}: {e}")
+                # Skip file creation if we can't create the directory
+                return
 
         # ── 3️⃣ Write the file (unchanged) ─────────────────────────────────────────
         file_path = os.path.join(output_dir, filename)
-        with open(file_path, "w", encoding="utf-8") as f:
-            f.write(content)
+        try:
+            with open(file_path, "w", encoding="utf-8") as f:
+                f.write(content)
+            print(f"Wrote file: {file_path}")
+        except OSError as e:
+            print(f"Warning: Could not write file {file_path}: {e}")
+            # Store the content in state even if we couldn't write to disk
+            self.state.generatedCodeFiles[filename] = content
 
-        print(f"Wrote file: {file_path}")
+    @listen(save_file_structure)
+    async def write_code_files(self):
+        """
+        Parse the file structure planning output, 
+        spawn an async writing job for each file, and await them concurrently.
+        """
+        print("=== Starting Code Generation Phase ===")
+        print("Generating code files concurrently...")
 
+        # Parse the file structure planning output into a Python list or dict
+        # Adjust the parsing to match whatever data shape you get back
+
+        # --- Option A: Use raw JSON to grab the array of files ---
+        file_structure = json.loads(self.state.fileStructurePlanningOutput)
+        files = file_structure["files"]  # This is the array of file specs
+
+        # If no files, exit early
+        if not files:
+            print("No files to generate. Check file structure output.")
+            return
+
+        # Create a list to store all tasks that we'll await concurrently
+        tasks = []
+        
+        # For each file specification, create and launch an async task
+        for file_spec in files:
+            task = asyncio.create_task(
+                self._generate_file_code(file_spec)
+            )
+            tasks.append(task)
+        
+        # Wait for all file generation tasks to complete
+        results = await asyncio.gather(*tasks)
+        
+        # Process results (store in state, etc.)
+        for result in results:
+            if result:  # Skip any None results
+                filename, content = result
+                # Store in state dictionary
+                self.state.generatedCodeFiles[filename] = content
+                
+                # Write the file to disk
+                self._write_file_to_disk(filename, content)
+        
+        print(f"=== Generated {len(self.state.generatedCodeFiles)} code files ===")
 
     @listen(write_code_files)
     def generate_assets(self):
@@ -341,6 +406,16 @@ class GameFlow(Flow[GameState]):
         in a sane directory structure inside ./Game/assets/.
         """
         print("=== Starting Asset Generation Phase ===")
+
+        # Create asset directories
+        try:
+            os.makedirs("./Game/assets/images", exist_ok=True)
+            os.makedirs("./Game/assets/audio", exist_ok=True)
+            os.makedirs("./assets/images", exist_ok=True)
+            os.makedirs("./assets/audio", exist_ok=True)
+            print("Created asset directories")
+        except OSError as e:
+            print(f"Warning: Could not create asset directories: {e}")
 
         # 1. Prepare crew inputs exactly as before
         try:

@@ -130,7 +130,7 @@ finalize_assets:
   agent: asset_manager
 generate_visual_assets:
   description: >
-    You (as the Image Generator) will use the **dalle** tool to produce every visual
+    You (as the Image Generator) will use the **generate_and_download_image** tool to produce every visual
     asset listed in the requirements.  For each item supply:
       • final image file path (PNG/WebP, transparent bg where needed)
       • the exact DALL·E prompt you used
@@ -143,11 +143,12 @@ generate_visual_assets:
 
 source_audio_assets:
   description: >
-    You (as the Audio Sourcer) will fetch/trim normalised WAV/OGG files that satisfy
+    You (as the Audio Sourcer) will use the **search_and_save_sound** tool to satisfy
     each audio requirement.  Steps:
-      1. Query Freesound API with semantic keywords.
+      1. For EACH sound, call the tool with EXACTLY this pattern:
+         search_and_save_sound(query="descriptive keywords", output_path="./assets/audio/filename.wav")
       2. Verify licence (CC0 or CC‑BY with attribution string).
-      3. Loudness‑normalise to ‑14 LUFS and export.
+      3. Loudness‑normalise to ‑14 LUFS and export.
       4. Update `assets/manifest_audio.json` with
          {file, original_url, licence, attribution}.
   expected_output: >
