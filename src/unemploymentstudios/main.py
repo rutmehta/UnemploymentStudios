@@ -413,9 +413,38 @@ class GameFlow(Flow[GameState]):
             os.makedirs("./Game/assets/audio", exist_ok=True)
             os.makedirs("./assets/images", exist_ok=True)
             os.makedirs("./assets/audio", exist_ok=True)
+            os.makedirs("./public/assets/images", exist_ok=True)
+            os.makedirs("./public/assets/audio", exist_ok=True)
             print("Created asset directories")
         except OSError as e:
             print(f"Warning: Could not create asset directories: {e}")
+
+        # Direct testing of tools before running crew
+        try:
+            print("Testing image generation tool directly...")
+            from unemploymentstudios.crews.asset_generation_crew.asset_generation_crew import GenerateAndDownloadImageTool, SearchAndSaveSoundTool
+            
+            # Test if API keys are available
+            print(f"OPENAI_API_KEY available: {bool(os.getenv('OPENAI_API_KEY'))}")
+            print(f"FREESOUND_API_KEY available: {bool(os.getenv('FREESOUND_API_KEY'))}")
+            
+            # Test image generation directly
+            test_image = GenerateAndDownloadImageTool()
+            image_result = test_image._run(
+                prompt="Test image for game - a simple game logo",
+                file_name="./assets/images/test_direct.png"
+            )
+            print(f"Direct image tool test result: {image_result}")
+            
+            # Test audio generation directly
+            test_audio = SearchAndSaveSoundTool()
+            audio_result = test_audio._run(
+                query="game background music",
+                output_path="./assets/audio/test_direct.mp3"
+            )
+            print(f"Direct audio tool test result: {audio_result}")
+        except Exception as e:
+            print(f"Direct tool testing error: {e}")
 
         # 1. Prepare crew inputs exactly as before
         try:
@@ -428,17 +457,35 @@ class GameFlow(Flow[GameState]):
                 "visual_style": expanded_concept.visual_style,
                 "audio_style": expanded_concept.audio_style,
                 "title": expanded_concept.title,
+                # Add explicit instructions to ensure tool usage
+                "force_tool_usage": True,
+                "required_image_count": 5,  # Minimum number of images to generate
+                "required_audio_count": 3,  # Minimum number of audio files to generate
+                "image_generation_instruction": "You MUST call the generate_and_download_image tool for every asset",
+                "audio_generation_instruction": "You MUST call the search_and_save_sound tool for every sound",
             }
 
+            print(f"Prepared asset inputs: {asset_inputs.keys()}")
+
             # 2. Kick off the AssetGenerationCrew
+            print("Starting AssetGenerationCrew...")
             asset_result = (
                 AssetGenerationCrew()
                 .crew()
                 .kickoff(inputs=asset_inputs)
             )
+            print(f"Asset crew result type: {type(asset_result)}")
+            print(f"Asset crew result has raw: {'raw' in dir(asset_result)}")
+            
             self.state.assetGenerationOutput = asset_result.raw
+            print(f"Asset generation output length: {len(self.state.assetGenerationOutput)}")
+
+            # Output a snippet to help debug
+            output_preview = self.state.assetGenerationOutput[:500] + "..." if len(self.state.assetGenerationOutput) > 500 else self.state.assetGenerationOutput
+            print(f"Asset generation output preview: {output_preview}")
 
             # 3. Copy everything into ./Game/assets/
+            print("Running _organise_generated_assets...")
             self._organise_generated_assets()
 
             # 4. Save raw log for transparency

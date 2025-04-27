@@ -128,29 +128,39 @@ finalize_assets:
     file structure, naming conventions, and technical requirements. This should be
     ready for developers to use in creating the actual game assets.
   agent: asset_manager
+
 generate_visual_assets:
   description: >
-    You (as the Image Generator) will use the **generate_and_download_image** tool to produce every visual
-    asset listed in the requirements.  For each item supply:
-      • final image file path (PNG/WebP, transparent bg where needed)
-      • the exact DALL·E prompt you used
-      • native resolution & any resize variants
-      • suggested <img> / CSS usage snippet
+    You (as the Image Generator) MUST call the generate_and_download_image tool for EACH visual asset. 
+    For EACH required visual asset:
+    
+    1. Identify a specific asset to create (character, environment, UI element, etc.)
+    2. Craft a detailed DALL-E prompt for that asset
+    3. CALL the tool with EXACTLY this syntax: 
+       generate_and_download_image(prompt="Your detailed prompt here", file_name="./assets/images/descriptive_name.png")
+    4. Repeat for each required asset (at least 5-10 total assets)
+    5. NEVER skip calling the tool - actual image generation is required
+
+    After generating all images, create a manifest mapping asset-name → {file, prompt, width, height, notes}
+    saved to `assets/manifest_images.json`.
   expected_output: >
-    A JSON‑like manifest mapping asset‑name → {file, prompt, width, height, notes}
+    A JSON‑like manifest mapping asset‑name → {file, prompt, width, height, notes}
     saved to `assets/manifest_images.json`.
   agent: image_generator
 
 source_audio_assets:
   description: >
-    You (as the Audio Sourcer) will use the **search_and_save_sound** tool to satisfy
-    each audio requirement.  Steps:
-      1. For EACH sound, call the tool with EXACTLY this pattern:
-         search_and_save_sound(query="descriptive keywords", output_path="./assets/audio/filename.wav")
-      2. Verify licence (CC0 or CC‑BY with attribution string).
-      3. Loudness‑normalise to ‑14 LUFS and export.
-      4. Update `assets/manifest_audio.json` with
-         {file, original_url, licence, attribution}.
+    You (as the Audio Sourcer) MUST use the search_and_save_sound tool for EACH audio requirement.
+    For EACH required sound:
+    
+    1. Identify a specific sound to acquire (effect, music, ambient, etc.)
+    2. CALL the tool with EXACTLY this syntax:
+       search_and_save_sound(query="descriptive keywords", output_path="./assets/audio/descriptive_name.wav")
+    3. Repeat for each required sound (at least 5-10 total sounds)
+    4. NEVER skip calling the tool - actual audio acquisition is required
+    
+    After acquiring all sounds, update `assets/manifest_audio.json` with
+    {file, original_url, licence, attribution}.
   expected_output: >
     A ready‑to‑import collection of audio files in `assets/audio/`
     plus the JSON manifest.

@@ -13,7 +13,6 @@ import pathlib
 import requests
 from typing import Any, List, Optional, Type
 import dotenv
-import freesound
 
 from bs4 import BeautifulSoup    
 # ---------------------------------------------------------------------------
@@ -24,7 +23,7 @@ from typing import Any
 
 # --------------------------- The actual Tool class ---------------------------
 class GenerateAndDownloadImageSchema(BaseModel):
-    print("GenerateAndDownloadImageSchema RUNNING")
+    # print("GenerateAndDownloadImageSchema RUNNING")
     prompt          : str = Field(..., description="Prompt for DALL·E")
     file_name       : str = Field(..., description="Where to save the image (PNG)")
     size            : str = Field("1024x1024", description="Image resolution")
@@ -37,7 +36,7 @@ class GenerateAndDownloadImageTool(BaseTool):
     A single tool that generates an image via OpenAI’s DALL·E API
     and downloads it locally (**url** or **b64_json** variant).
     """
-    print("GenerateAndDownloadImageTool RUNNING")
+    # print("GenerateAndDownloadImageTool RUNNING")
     name        : str = "generate_and_download_image"
     description : str = (
         "Generate an image from a prompt via DALL·E, "
@@ -304,17 +303,143 @@ class AssetGenerationCrew:
         )
     @task
     def generate_visual_assets(self) -> Task:
-        return Task(
+        """Force image generation by ensuring the tools are used directly"""
+        task = Task(
             config=self.tasks_config["generate_visual_assets"],
             context=[self.analyze_asset_requirements()],
         )
+        
+        # Override the task execution method to ensure tools are used
+        original_execute = task.execute
+        
+        def ensure_tool_usage(*args, **kwargs):
+            # First, run the normal task execution
+            result = original_execute(*args, **kwargs)
+            
+            # Check if any images were created
+            import os
+            import json
+            
+            # If no images were created during the normal execution, create some fallback images
+            if not os.path.exists("./assets/images") or len(os.listdir("./assets/images")) <= 1:  # Only the test_direct.png exists
+                print("No images created by agent! Generating fallback images...")
+                
+                # Get the tools from the image_generator agent
+                image_tool = None
+                for tool in self.image_generator().tools:
+                    if tool.name == "generate_and_download_image":
+                        image_tool = tool
+                        break
+                
+                if image_tool:
+                    # Create basic game images directly
+                    basic_images = [
+                        ("main_character", "A hero character for a video game with determined expression, detailed pixel art style"),
+                        ("enemy", "A menacing enemy character for a video game, detailed pixel art style"),
+                        ("background", "A beautiful game background landscape, pixel art style"),
+                        ("ui_button", "A stylish game UI button in pixel art style"),
+                        ("logo", "A game logo with stylized text, pixel art style")
+                    ]
+                    
+                    manifest = {}
+                    for name, prompt in basic_images:
+                        try:
+                            filename = f"./assets/images/{name}.png"
+                            print(f"Directly generating image: {filename} with prompt: {prompt}")
+                            result_str = image_tool._run(prompt=prompt, file_name=filename)
+                            result_json = json.loads(result_str)
+                            manifest[name] = {
+                                "file": filename,
+                                "prompt": prompt,
+                                "width": 1024,
+                                "height": 1024
+                            }
+                            print(f"Generated image: {filename}")
+                        except Exception as e:
+                            print(f"Error generating image {name}: {e}")
+                    
+                    # Save manifest
+                    os.makedirs("./assets", exist_ok=True)
+                    with open("./assets/manifest_images.json", "w") as f:
+                        json.dump(manifest, f, indent=2)
+                    
+                    # Update result with information about the directly generated images
+                    result += "\n\nFallback images were generated directly: " + ", ".join([name for name, _ in basic_images])
+            
+            return result
+        
+        # Replace the execute method with our enhanced version
+        task.execute = ensure_tool_usage
+        return task
 
     @task
     def source_audio_assets(self) -> Task:
-        return Task(
+        """Force audio generation by ensuring the tools are used directly"""
+        task = Task(
             config=self.tasks_config["source_audio_assets"],
             context=[self.analyze_asset_requirements()],
         )
+        
+        # Override the task execution method to ensure tools are used
+        original_execute = task.execute
+        
+        def ensure_audio_tool_usage(*args, **kwargs):
+            # First, run the normal task execution
+            result = original_execute(*args, **kwargs)
+            
+            # Check if any audio files were created
+            import os
+            import json
+            
+            # If no audio files were created during the normal execution, create some fallback sounds
+            if not os.path.exists("./assets/audio") or len(os.listdir("./assets/audio")) <= 1:  # Only the test_direct.mp3 exists
+                print("No audio files created by agent! Generating fallback audio...")
+                
+                # Get the tools from the audio_sourcer agent
+                audio_tool = None
+                for tool in self.audio_sourcer().tools:
+                    if tool.name == "search_and_save_sound":
+                        audio_tool = tool
+                        break
+                
+                if audio_tool:
+                    # Create basic game sounds directly
+                    basic_sounds = [
+                        ("background_music", "game background music"),
+                        ("jump_sound", "game jump sound effect"),
+                        ("collect_item", "game collect item sound")
+                    ]
+                    
+                    manifest = {}
+                    for name, query in basic_sounds:
+                        try:
+                            filename = f"./assets/audio/{name}.mp3"
+                            print(f"Directly searching for audio: {filename} with query: {query}")
+                            result_str = audio_tool._run(query=query, output_path=filename)
+                            result_json = json.loads(result_str)
+                            manifest[name] = {
+                                "file": filename,
+                                "query": query,
+                                "original_url": result_json.get("original_url", ""),
+                                "preview_url": result_json.get("preview_url", "")
+                            }
+                            print(f"Retrieved audio: {filename}")
+                        except Exception as e:
+                            print(f"Error retrieving audio {name}: {e}")
+                    
+                    # Save manifest
+                    os.makedirs("./assets", exist_ok=True)
+                    with open("./assets/manifest_audio.json", "w") as f:
+                        json.dump(manifest, f, indent=2)
+                    
+                    # Update result with information about the directly generated audio
+                    result += "\n\nFallback audio files were generated directly: " + ", ".join([name for name, _ in basic_sounds])
+            
+            return result
+        
+        # Replace the execute method with our enhanced version
+        task.execute = ensure_audio_tool_usage
+        return task
 
     @task
     def integrate_assets(self) -> Task:
@@ -334,8 +459,27 @@ class AssetGenerationCrew:
     def crew(self) -> Crew:
         """Create the crew"""
         return Crew(
-            agents=self.agents,
-            tasks=self.tasks,
+            agents=[
+                self.asset_manager(),
+                self.graphic_designer(),
+                self.sound_designer(),
+                self.ui_designer(),
+                self.image_generator(),  # Explicitly include image generator
+                self.audio_sourcer(),    # Explicitly include audio sourcer
+                self.asset_integrator()
+            ],
+            tasks=[
+                self.analyze_asset_requirements(),
+                self.design_character_assets(),
+                self.design_environment_assets(),
+                self.design_ui_elements(),
+                self.create_sound_effects(),
+                self.create_background_music(),
+                self.finalize_assets(),
+                self.generate_visual_assets(),  # Explicitly include visual asset generation
+                self.source_audio_assets(),     # Explicitly include audio asset generation
+                self.integrate_assets()
+            ],
             process=Process.sequential,
             verbose=True
         )
